@@ -74,7 +74,7 @@ test('two MCs match, listeners receive chat, and invalid data cannot stop the se
   assert.equal(health.status, 200);
   assert.equal(await health.text(), 'ok');
   const page = await fetch(base + '/');
-  assert.match(await page.text(), /もじもしラヂオ/);
+  assert.match(await page.text(), /もじもじラジオ/);
 
   const a = new Client(), b = new Client(), c = new Client();
   t.after(() => { for (const client of [a, b, c]) client.socket.terminate(); });
