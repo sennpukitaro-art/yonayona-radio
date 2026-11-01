@@ -1,0 +1,15 @@
+{
+  "name": "yonayona-radio",
+  "version": "0.3.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
