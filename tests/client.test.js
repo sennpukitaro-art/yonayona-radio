@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-function bootstrap() {
+function bootstrap(overrides = {}) {
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
   const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
   const elements = new Map();
@@ -35,7 +35,7 @@ function bootstrap() {
     location: { protocol: 'https:', host: 'radio.example' },
     WebSocket: FakeSocket, confirm: () => true,
     setTimeout: (fn, delay) => timers.push({ fn, delay }),
-    setInterval: () => 1, Date, console
+    setInterval: () => 1, Date, console, ...overrides
   }, { filename: 'public/index.html script' });
   return { elements, sockets, timers };
 }
@@ -80,4 +80,34 @@ test('joined screen shows messages as text and Japanese IME confirmation does no
   el.get('chatInput').onkeydown({ key: 'Enter', isComposing: false });
   assert.equal(socket.sent.at(-1).type, 'chat');
   assert.equal(socket.sent.at(-1).text, 'こんばんは');
+});
+
+test('conversation examples stay separate from live matching and sharing reports actual copy results', async () => {
+  let copied;
+  const { elements: el, sockets } = bootstrap({ navigator: {
+    clipboard: { writeText: async value => { copied = value; } }
+  } });
+  sockets[0].open();
+  const before = sockets[0].sent.length;
+  el.get('demoNext').onclick();
+  assert.equal(el.get('demoMessages').children.length, 3);
+  assert.match(el.get('demoMessages').children[0].children[0].textContent, /架空/);
+  assert.equal(sockets[0].sent.length, before);
+  assert.equal(el.get('live').classList.contains('hidden'), true);
+  await el.get('shareHome').onclick();
+  assert.equal(copied, 'https://yonayona-radio.onrender.com/');
+  assert.match(el.get('shareStatusHome').textContent, /コピーしました/);
+  const fallback = bootstrap({ navigator: {
+    clipboard: { writeText: async () => { throw new Error('Permission denied'); } }
+  } }).elements;
+  await fallback.get('shareWaiting').onclick();
+  assert.equal(fallback.get('shareFallbackWaiting').classList.contains('hidden'), false);
+  assert.doesNotMatch(fallback.get('shareStatusWaiting').textContent, /コピーしました/);
+});
+
+test('trial gathering notice disappears at the announced Japan-time end', () => {
+  class TrialDate extends Date { static now() { return Date.parse('2026-11-03T21:29:59+09:00'); } }
+  class AfterDate extends Date { static now() { return Date.parse('2026-11-03T21:30:00+09:00'); } }
+  assert.equal(bootstrap({ Date: TrialDate }).elements.get('trialTimes').classList.contains('hidden'), false);
+  assert.equal(bootstrap({ Date: AfterDate }).elements.get('trialTimes').classList.contains('hidden'), true);
 });
