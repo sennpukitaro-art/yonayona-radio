@@ -69,6 +69,22 @@ class Client {
   }
 }
 
+test('shared preview assets and crawler files return usable content types', async () => {
+  const image = await fetch(base + '/cover.png');
+  assert.equal(image.status, 200);
+  assert.equal(image.headers.get('content-type'), 'image/png');
+  assert.deepEqual([...new Uint8Array(await image.arrayBuffer()).slice(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+  const head = await fetch(base + '/icon.png', { method: 'HEAD' });
+  assert.equal(head.status, 200);
+  assert.equal(head.headers.get('content-type'), 'image/png');
+  assert.equal((await head.arrayBuffer()).byteLength, 0);
+  const sitemap = await fetch(base + '/sitemap.xml');
+  assert.match(sitemap.headers.get('content-type'), /application\/xml/);
+  assert.match(await sitemap.text(), /<loc>https:\/\/yonayona-radio\.onrender\.com\/<\/loc>/);
+  const robots = await fetch(base + '/robots.txt');
+  assert.match(await robots.text(), /Sitemap: https:\/\/yonayona-radio\.onrender\.com\/sitemap\.xml/);
+});
+
 test('two MCs match, listeners receive chat, and invalid data cannot stop the server', async t => {
   const health = await fetch(base + '/health');
   assert.equal(health.status, 200);
