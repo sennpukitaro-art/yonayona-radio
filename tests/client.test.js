@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const RadioTraffic = require('../public/traffic');
 
 function bootstrap(overrides = {}) {
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
@@ -33,7 +34,7 @@ function bootstrap(overrides = {}) {
   vm.runInNewContext(script, {
     document: { getElementById: id => elements.get(id), createElement: element },
     location: { protocol: 'https:', host: 'radio.example' },
-    WebSocket: FakeSocket, confirm: () => true,
+    WebSocket: FakeSocket, confirm: () => true, RadioTraffic,
     setTimeout: (fn, delay) => timers.push({ fn, delay }),
     setInterval: () => 1, Date, console, ...overrides
   }, { filename: 'public/index.html script' });
@@ -42,7 +43,7 @@ function bootstrap(overrides = {}) {
 
 test('home controls initialize, send matching requests, and recover after a waiting disconnect', () => {
   const { elements: el, sockets, timers } = bootstrap();
-  assert.equal(sockets[0].url, 'wss://radio.example');
+  assert.equal(sockets[0].url, 'wss://radio.example/?utm_source=direct');
   sockets[0].open();
   assert.equal(el.get('status').textContent, 'オンライン');
   el.get('start').onclick();
@@ -95,7 +96,7 @@ test('conversation examples stay separate from live matching and sharing reports
   assert.equal(sockets[0].sent.length, before);
   assert.equal(el.get('live').classList.contains('hidden'), true);
   await el.get('shareHome').onclick();
-  assert.equal(copied, 'https://yonayona-radio.onrender.com/');
+  assert.equal(copied, 'https://yonayona-radio.onrender.com/?utm_source=share');
   assert.match(el.get('shareStatusHome').textContent, /コピーしました/);
   const fallback = bootstrap({ navigator: {
     clipboard: { writeText: async () => { throw new Error('Permission denied'); } }
@@ -110,4 +111,26 @@ test('trial gathering notice disappears at the announced Japan-time end', () => 
   class AfterDate extends Date { static now() { return Date.parse('2026-11-03T21:30:00+09:00'); } }
   assert.equal(bootstrap({ Date: TrialDate }).elements.get('trialTimes').classList.contains('hidden'), false);
   assert.equal(bootstrap({ Date: AfterDate }).elements.get('trialTimes').classList.contains('hidden'), true);
+});
+
+test('waiting counts use server snapshots and become unknown on disconnect or old snapshots', () => {
+  const { elements: el, sockets } = bootstrap();
+  const socket = sockets[0];
+  assert.equal(el.get('queueStatus').textContent, '待機人数を確認中…');
+  socket.open();
+  socket.message({type:'rooms',rooms:[],waitingCount:0});
+  assert.equal(el.get('queueStatus').textContent, 'マッチング待機中 0人');
+  socket.message({type:'waiting'});
+  socket.message({type:'rooms',rooms:[],waitingCount:1});
+  assert.equal(el.get('waitingCount').textContent, 'マッチング待機中 1人（自分を含む）');
+  socket.message({type:'rooms',rooms:[]});
+  assert.equal(el.get('queueStatus').textContent, '待機人数を確認中…');
+  socket.message({type:'rooms',rooms:[],waitingCount:2});
+  socket.onclose();
+  assert.equal(el.get('queueStatus').textContent, '待機人数を確認中…');
+});
+
+test('only a classified source is sent to WebSocket, without private query parameters', () => {
+  const {sockets}=bootstrap({location:{protocol:'https:',host:'radio.example',search:'?utm_source=x&email=private@example.test'}});
+  assert.equal(sockets[0].url,'wss://radio.example/?utm_source=x');
 });
