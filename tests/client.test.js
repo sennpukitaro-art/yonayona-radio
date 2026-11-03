@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const RadioTraffic = require('../public/traffic');
+const RadioSchedule = require('../public/schedule');
 
 function bootstrap(overrides = {}) {
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
@@ -34,7 +35,7 @@ function bootstrap(overrides = {}) {
   vm.runInNewContext(script, {
     document: { getElementById: id => elements.get(id), createElement: element },
     location: { protocol: 'https:', host: 'radio.example' },
-    WebSocket: FakeSocket, confirm: () => true, RadioTraffic,
+    WebSocket: FakeSocket, confirm: () => true, RadioTraffic, RadioSchedule,
     setTimeout: (fn, delay) => timers.push({ fn, delay }),
     setInterval: () => 1, Date, console, ...overrides
   }, { filename: 'public/index.html script' });
@@ -133,4 +134,13 @@ test('waiting counts use server snapshots and become unknown on disconnect or ol
 test('only a classified source is sent to WebSocket, without private query parameters', () => {
   const {sockets}=bootstrap({location:{protocol:'https:',host:'radio.example',search:'?utm_source=x&email=private@example.test'}});
   assert.equal(sockets[0].url,'wss://radio.example/?utm_source=x');
+});
+
+
+test('schedule starts empty and renders only real configured events as text', () => {
+  assert.match(bootstrap().elements.get('scheduleList').children[0].textContent, /開催予定はありません/);
+  const schedule = {...RadioSchedule, events:[{title:'<img src=x>',start:'2099-01-01T21:00:00+09:00',end:'2099-01-01T21:30:00+09:00'}]};
+  const list=bootstrap({RadioSchedule:schedule}).elements.get('scheduleList');
+  assert.equal(list.children[0].children[0].textContent,'<img src=x>');
+  assert.match(list.children[0].children[2].textContent,/日本時間/);
 });
