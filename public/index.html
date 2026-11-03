@@ -53,6 +53,7 @@ a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-hig
 <div class="msg listener"><div class="by">リスナー（架空）</div><div>でも毎日ちょっとうれしいやつ。</div></div>
 </div><button id="demoNext" class="alt wide">別のお題の会話例を見る</button></details>
 <aside class="invite hidden" id="trialTimes" aria-labelledby="trialHeading"><h3 id="trialHeading">11/3、おためし集合時間</h3><p><time datetime="2026-11-03T12:30:00+09:00">昼 12:30〜13:00</time> ／ <time datetime="2026-11-03T21:00:00+09:00">夜 21:00〜21:30</time>（日本時間）</p><p>同じ時間に集まって、5分だけでもどうぞ。参加者同士のランダムマッチです。相手がいない場合は待機になります。</p></aside>
+<section class="invite" aria-labelledby="scheduleHeading"><h3 id="scheduleHeading">開催予定</h3><div id="scheduleList" role="status"><p>開催予定を確認中…</p></div><p>予定の時間にランダムマッチングを押してご参加ください。相手がいないときは待機になります。</p></section>
 <h2 class="section-space">放送中の番組</h2><p class="muted">番組があれば、リスナーとして読む・コメントすることもできます。</p><div id="rooms" class="stack"><p>放送中の番組を読み込み中…</p></div>
 <div class="share-box"><p>この雰囲気が好きそうな人に。</p><button id="shareHome" class="alt wide">もじもじラジオのリンクを共有</button><button id="copyHome" class="alt wide" style="margin-top:8px">リンクだけコピーする</button><label class="hidden" id="shareFallbackHome">コピーして共有できます<input class="share-copy" id="shareLinkHome" readonly value="https://yonayona-radio.onrender.com/?utm_source=share" aria-label="共有用リンク"></label><p id="shareStatusHome" class="muted" role="status"></p></div>
 </section>
@@ -68,7 +69,7 @@ a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-hig
 <details><summary>会話は誰に見える？</summary><p>放送中の番組には、ほかの人がリスナーとして参加できます。MCの会話とリスナーコメントは、その番組の参加者に表示されます。氏名・連絡先・住所などの個人情報は投稿しないでください。</p></details>
 </section>
 <footer><p class="notice">改善のため、ページ表示・マッチング・会話成立の回数と流入元の分類を記録します。Cookie・氏名・会話本文はこの計測に記録しません。表示回数には再読み込みやボットを含む場合があります。</p><div class="footer-links"><a href="https://x.com/mojimoji_radio" target="_blank" rel="noopener noreferrer">公式X・お知らせ</a><a href="https://tsukutta.app/stories/user-87d21bdd/mojimoji-radio-guide" target="_blank" rel="noopener noreferrer">詳しい遊び方</a></div><p class="notice">試験版 v0.3.1 · ルーム情報はサーバー再起動時に消去されます。個人情報は投稿しないでください。</p></footer>
-</main><script src="/traffic.js"></script><script>
+</main><script src="/traffic.js"></script><script src="/schedule.js"></script><script>
 
 const $=id=>document.getElementById(id);
 const visitSource=RadioTraffic.source(location.search,document.referrer);
@@ -87,6 +88,8 @@ const appUrl='https://yonayona-radio.onrender.com/?utm_source=share';
 async function copyApp(context){const status=$('shareStatus'+context);$('shareFallback'+context).classList.toggle('hidden',false);status.textContent='下のリンクを長押し、または選択してコピーできます。';try{if(typeof navigator!=='undefined'&&navigator.clipboard?.writeText){await navigator.clipboard.writeText(appUrl);status.textContent='リンクをコピーしました。好きな場所に貼り付けて共有できます。';return}}catch(error){}}
 async function shareApp(context){if(typeof navigator!=='undefined'&&navigator.share){try{await navigator.share({title:'もじもじラジオ',text:'声を出さずに、5分だけ雑談。無料・登録不要の文字ラジオ。',url:appUrl});return}catch(error){if(error.name==='AbortError')return}}return copyApp(context)}
 $('shareHome').onclick=()=>shareApp('Home');$('shareWaiting').onclick=()=>shareApp('Waiting');$('copyHome').onclick=()=>copyApp('Home');$('copyWaiting').onclick=()=>copyApp('Waiting');
+function renderSchedule(){const root=$('scheduleList');root.replaceChildren();if(typeof RadioSchedule==='undefined'){const p=document.createElement('p');p.textContent='開催予定を読み込めませんでした。';root.append(p);return}const events=RadioSchedule.upcoming(RadioSchedule.events,Date.now());if(!events.length){const p=document.createElement('p');p.textContent='現在、開催予定はありません。';root.append(p);return}events.forEach(event=>{const item=document.createElement('p');const title=document.createElement('strong');title.textContent=event.title;const time=document.createElement('time');time.dateTime=event.start;time.textContent=RadioSchedule.format(event);item.append(title,document.createElement('br'),time);root.append(item)})}
+renderSchedule();setInterval(renderSchedule,60000);
 function updateTrialTimes(){const now=Date.now();const start=Date.parse('2026-11-02T00:00:00+09:00');const end=Date.parse('2026-11-03T21:30:00+09:00');$('trialTimes').classList.toggle('hidden',now<start||now>=end)}
 updateTrialTimes();setInterval(updateTrialTimes,30000);
 
