@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>もじもじラジオ | 集客レポート</title>
+<style>
+:root{color-scheme:light;--ink:#22213c;--muted:#626078;--paper:#fff;--line:#e4e2ed;--accent:#6350bc;--soft:#f0ecfa;--pink:#a13f68}*{box-sizing:border-box}body{margin:0;background:#f5f3f8;color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1120px;margin:auto;padding:32px 24px 48px}h1,h2,p{margin:0}h1{font-size:clamp(25px,4vw,34px);letter-spacing:.03em;line-height:1.35}h2{font-size:19px}header{padding:22px 0 26px}.eyebrow{color:var(--accent);font-weight:750;font-size:12px;letter-spacing:.14em;margin-bottom:8px}.subtitle{color:var(--muted);margin-top:10px}.badge{display:inline-block;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:750;background:var(--soft);color:var(--accent);margin-bottom:12px}.sample{background:#fce7ed;color:#942d51}.notice{border:1px solid #e0d2a7;border-left:4px solid #b4892c;background:#fffaf0;border-radius:12px;padding:16px 18px;font-size:13px}.notice strong{display:block;font-size:14px;margin-bottom:5px}.notice p+p{margin-top:5px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:20px}.filters{display:flex;flex-wrap:wrap;gap:14px;align-items:end}.field{display:flex;flex-direction:column;gap:5px;min-width:140px;flex:1}.field label{font-size:12px;font-weight:700;color:var(--muted)}input,select,button{font:inherit;min-height:44px;border-radius:9px;border:1px solid #c9c5d7;background:white;color:var(--ink);padding:8px 10px;max-width:100%}button{cursor:pointer;background:var(--soft);border-color:#d9d2ec;font-size:13px;font-weight:700}button:hover{background:#e5def7}button:disabled{opacity:.5;cursor:default}:focus-visible{outline:3px solid #9d85eb;outline-offset:2px}.status{margin-top:12px;font-size:13px;color:var(--muted)}.error{color:#9b294c}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}.stat{border:1px solid var(--line);background:white;border-radius:14px;padding:18px}.stat:nth-child(4){background:var(--soft);border-color:#d4c9ef}.stat h2{font-size:13px;font-weight:700}.value{font-size:36px;overflow-wrap:anywhere;font-weight:750;font-variant-numeric:tabular-nums;line-height:1.3;margin:8px 0}.unit{font-size:12px;color:var(--muted)}.programs{margin-top:14px;padding:12px 16px;border-radius:10px;background:#eae6f2;color:#514565;font-size:13px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}.caption{font-size:12px;color:var(--muted);margin-top:3px}.bar-list{display:grid;gap:15px}.bar-row{display:grid;grid-template-columns:105px 1fr 54px;gap:12px;align-items:center;font-size:13px}.track{height:12px;border-radius:6px;background:#f0edf6;overflow:hidden}.bar{height:100%;border-radius:6px;background:var(--accent)}.count{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}table{border-collapse:collapse;width:100%;font-size:14px;table-layout:fixed}th,td{padding:13px 10px;text-align:right;border-bottom:1px solid var(--line);vertical-align:middle;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}th{font-size:12px;font-weight:650;color:var(--muted);background:#faf9fc}th:first-child,td:first-child{text-align:left;width:24%}tbody th{color:var(--ink);font-weight:650;background:none}tr:last-child td,tr:last-child th{border-bottom:0}details summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:16px;font-weight:700}.definitions{display:grid;grid-template-columns:1fr 1fr;gap:16px 30px;margin-top:14px}.definitions dt{font-size:13px;font-weight:750}.definitions dd{margin:4px 0 0;font-size:13px;color:var(--muted)}.empty{padding:24px;text-align:center;color:var(--muted);background:#faf9fc;border-radius:10px}.empty[hidden]{display:none}.footer{font-size:12px;color:var(--muted);margin-top:22px}.no-script{display:block;margin:20px 0;padding:14px;background:#fff1d6}#day-source-table th:first-child{width:32%}[hidden]{display:none!important}
+@media(max-width:680px){main{padding:16px 14px 30px}header{padding:16px 2px 20px}.panel{padding:16px;margin-top:16px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.stat{padding:14px}.value{font-size:30px}.notice{padding:13px 14px}.filters{gap:10px}.field{min-width:calc(50% - 10px)}.field.source{min-width:100%}.filters button{flex:1}.definitions{grid-template-columns:1fr}.bar-row{grid-template-columns:86px 1fr 42px;gap:8px;font-size:12px}.responsive thead{display:none}.responsive,.responsive tbody{display:block}.responsive tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 0;border-bottom:1px solid var(--line)}.responsive tr:last-child{border-bottom:0}.responsive tbody th:first-child{grid-column:1/-1;width:auto;padding:0 0 4px;font-size:14px}.responsive td{padding:0;border:0;text-align:left;font-weight:700}.responsive td:before{content:attr(data-label);display:block;font-size:11px;color:var(--muted);font-weight:400}.responsive tbody th{border:0}.section-head select{width:100%}}
+@media print{body{background:white}main{max-width:none;padding:0}.filters,button,#chart-metric{display:none}.panel,.stat{break-inside:avoid}details{display:none}.notice{margin-bottom:15px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">MOJIMOJI RADIO / LOCAL REPORT</div>
+<span class="badge sample" id="sample-badge" hidden>サンプルデータ・実績ではありません</span>
+<h1>集客の動きを、件数で見る。</h1>
+<p class="subtitle">もじもじラジオ 集客レポート <span class="badge">日本時間 / JST</span></p>
+</header>
+<aside class="notice" aria-label="集計値の注意">
+<strong>この数字はイベント件数です。実人数・正確なコンバージョン率は算出できません。</strong>
+<p>ページ表示は再読み込み・ボット・運営の確認を含み得ます。同一人物の重複やボットは区別できず、開始のやり直しや再参加も別件です。</p>
+<p>保存したログの範囲だけを比較します。欠落期間や記録のない日は、利用がなかったとは判断できません。重複するログを混ぜると重複計上します。</p>
+</aside>
+<noscript><p class="no-script">レポートの表示にはJavaScriptを有効にしてください。通信は不要です。</p></noscript>
+<section class="panel" aria-label="表示する範囲">
+<div class="filters">
+<div class="field"><label for="from">開始日（日本時間）</label><input type="date" id="from"></div>
+<div class="field"><label for="to">終了日（日本時間）</label><input type="date" id="to"></div>
+<div class="field source"><label for="source">流入元</label><select id="source"><option value="all">すべての流入元</option></select></div>
+<button type="button" id="reset">全期間に戻す</button>
+<button type="button" id="export">比較CSVを保存</button>
+</div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+</section>
+<div class="stats" id="stats" aria-label="選択範囲の合計"></div>
+<p class="programs" id="programs"></p>
+<section class="panel" aria-labelledby="chart-heading">
+<div class="section-head"><div><h2 id="chart-heading">日ごとの動き</h2><p class="caption">記録のある日のみ表示。同じイベントの件数を比べます。</p></div><select id="chart-metric" aria-label="グラフで比較するイベント"></select></div>
+<div id="chart" class="bar-list"></div>
+</section>
+<section class="panel" aria-labelledby="source-heading">
+<div class="section-head"><div><h2 id="source-heading">流入元を比べる</h2><p class="caption">会話成立、マッチング成立、ページ表示の件数順。順位は集客効率を示すものではありません。</p></div></div>
+<div id="source-table"></div>
+</section>
+<section class="panel" aria-labelledby="daily-heading">
+<div class="section-head"><div><h2 id="daily-heading">日別の件数</h2><p class="caption">マッチング・会話成立は参加接続ごとの記録。番組数とは異なります。</p></div></div>
+<div id="daily-table"></div>
+</section>
+<details class="panel"><summary>日付 × 流入元の内訳</summary><p class="caption">比較CSVもこの単位で保存します。記録にある日付・流入元の組み合わせだけを表示します。</p><div id="day-source-table"></div></details>
+<details class="panel" open><summary>数字の読み方</summary>
+<dl class="definitions">
+<div><dt>ページ表示</dt><dd>成功したホームのGET要求（page_view）。人や訪問回数を一意に数えたものではありません。</dd></div>
+<div><dt>マッチング開始</dt><dd>待機開始・招待の作成／参加（matching_attempt）。同じ人がやり直した場合も増えます。</dd></div>
+<div><dt>マッチング成立</dt><dd>成立した各MC接続（matched_participant）。1番組の成立で2件記録します。ユニーク人数ではありません。</dd></div>
+<div><dt>会話成立</dt><dd>MC双方が1回以上投稿した時の各MC接続（conversation_participant）。1番組で2件、各流入元に記録します。</dd></div>
+<div><dt>会話成立の番組数</dt><dd>conversationは1番組1件の全体記録です。流入元に配分できないため、全流入元の合計と日別表に補足表示します。流入元別の件数を2で割って番組数にはできません。</dd></div>
+<div><dt>0件・流入元・日付</dt><dd>0件は保存データに該当記録がない意味です。タグや参照元の分類は自己申告等に依存し、ページと接続で異なる場合もあります。日をまたぐ待機・会話もあるため、同じ人の段階別の歩留まりとして扱えません。ランダムと招待は区別できません。</dd></div>
+</dl>
+</details>
+<p class="footer">手元のファイル内だけで表示・絞り込み・CSV作成を行います。外部への送信・アクセス解析・追加サービスはありません。<span id="input-note"></span></p>
+</main>
+<script type="application/json" id="report-data">__REPORT_DATA__</script>
+<script>__REPORT_UI__</script>
+</body>
+</html>
