@@ -25,7 +25,7 @@ function bootstrap(overrides = {}) {
   for (const match of html.matchAll(/id="([^"]+)"/g)) elements.set(match[1], element());
   for (const id of ['waiting', 'inviteWaiting', 'live', 'finished', 'inviteOffer']) elements.get(id).classList.toggle('hidden', true);
   elements.get('name').value = 'テストMC';
-  const sockets = [], timers = [];
+  const sockets = [], timers = [], intervals = [];
   class FakeSocket {
     constructor(url) { this.url = url; this.readyState = 0; this.sent = []; sockets.push(this); }
     send(data) { this.sent.push(JSON.parse(data)); }
@@ -37,9 +37,9 @@ function bootstrap(overrides = {}) {
     location: { protocol: 'https:', host: 'radio.example' },
     WebSocket: FakeSocket, confirm: () => true, RadioTraffic, RadioSchedule,
     setTimeout: (fn, delay) => timers.push({ fn, delay }),
-    setInterval: () => 1, Date, URL, URLSearchParams, console, ...overrides
+    setInterval: (fn, delay) => { intervals.push({ fn, delay }); return intervals.length; }, Date, URL, URLSearchParams, console, ...overrides
   }, { filename: 'public/index.html script' });
-  return { elements, sockets, timers };
+  return { elements, sockets, timers, intervals };
 }
 
 test('home controls initialize, send matching requests, and recover after a waiting disconnect', () => {
@@ -109,11 +109,10 @@ test('conversation examples stay separate from live matching and sharing reports
   assert.doesNotMatch(fallback.get('shareStatusWaiting').textContent, /コピーしました/);
 });
 
-test('trial gathering notice disappears at the announced Japan-time end', () => {
-  class TrialDate extends Date { static now() { return Date.parse('2026-11-03T21:29:59+09:00'); } }
-  class AfterDate extends Date { static now() { return Date.parse('2026-11-03T21:30:00+09:00'); } }
-  assert.equal(bootstrap({ Date: TrialDate }).elements.get('trialTimes').classList.contains('hidden'), false);
-  assert.equal(bootstrap({ Date: AfterDate }).elements.get('trialTimes').classList.contains('hidden'), true);
+test('page elements have unique IDs so controls and gathering notes cannot be duplicated', () => {
+  const html=fs.readFileSync(path.join(__dirname,'../public/index.html'),'utf8');
+  const ids=[...html.matchAll(/id="([^"]+)"/g)].map(match=>match[1]);
+  assert.equal(ids.length,new Set(ids).size,'Each element ID must appear only once');
 });
 
 test('waiting counts use server snapshots and become unknown on disconnect or old snapshots', () => {
@@ -139,12 +138,59 @@ test('only a classified source is sent to WebSocket, without private query param
 });
 
 
-test('schedule starts empty and renders only real configured events as text', () => {
-  assert.match(bootstrap().elements.get('scheduleList').children[0].textContent, /開催予定はありません/);
+test('gathering notes stay hidden without plans and show the same configured time safely on both screens', () => {
+  const empty=bootstrap().elements;
+  for(const id of ['scheduleHome','scheduleWaiting'])assert.equal(empty.get(id).classList.contains('hidden'),true);
   const schedule = {...RadioSchedule, events:[{title:'<img src=x>',start:'2099-01-01T21:00:00+09:00',end:'2099-01-01T21:30:00+09:00'}]};
-  const list=bootstrap({RadioSchedule:schedule}).elements.get('scheduleList');
-  assert.equal(list.children[0].children[0].textContent,'<img src=x>');
-  assert.match(list.children[0].children[2].textContent,/日本時間/);
+  const {elements:el,sockets}=bootstrap({RadioSchedule:schedule});
+  for(const [panel,listId] of [['scheduleHome','scheduleList'],['scheduleWaiting','scheduleListWaiting']]){
+    assert.equal(el.get(panel).classList.contains('hidden'),false);
+    const list=el.get(listId);
+    assert.equal(list.children[0].children[0].textContent,'<img src=x>');
+    assert.match(list.children[0].children[2].textContent,/日本時間/);
+    assert.equal(list.children[0].children[2].dateTime,schedule.events[0].start);
+  }
+  assert.equal(el.get('scheduleList').children[0].children[2].textContent,el.get('scheduleListWaiting').children[0].children[2].textContent);
+  assert.equal(el.get('scheduleHeading').textContent,'次の集合時間');
+  sockets[0].open();sockets[0].message({type:'waiting'});
+  assert.equal(el.get('home').classList.contains('hidden'),true);
+  assert.equal(el.get('waiting').classList.contains('hidden'),false);
+  assert.equal(el.get('scheduleWaiting').classList.contains('hidden'),false);
+});
+
+test('gathering notes become current, advance, and disappear after the final end without reloading', () => {
+  let now=Date.parse('2026-11-06T21:59:59+09:00');
+  class Clock extends Date {static now(){return now;}}
+  const events=[
+    {title:'先の予定',start:'2026-11-07T22:00:00+09:00',end:'2026-11-07T22:15:00+09:00'},
+    {title:'最初の予定',start:'2026-11-06T22:00:00+09:00',end:'2026-11-06T22:15:00+09:00'}
+  ];
+  const {elements:el,intervals}=bootstrap({Date:Clock,RadioSchedule:{...RadioSchedule,events}});
+  const refresh=intervals.find(timer=>timer.delay===60000).fn;
+  assert.equal(el.get('scheduleList').children[0].children[0].textContent,'最初の予定');
+  now=Date.parse(events[1].start);refresh();
+  assert.equal(el.get('scheduleHeading').textContent,'ただいまの集合時間');
+  assert.equal(el.get('scheduleHeadingWaiting').textContent,'ただいまの集合時間');
+  now=Date.parse(events[1].end);refresh();
+  assert.equal(el.get('scheduleList').children[0].children[0].textContent,'先の予定');
+  assert.equal(el.get('scheduleListWaiting').children[0].children[0].textContent,'先の予定');
+  assert.equal(el.get('scheduleHeading').textContent,'次の集合時間');
+  now=Date.parse(events[0].end);refresh();
+  for(const id of ['scheduleHome','scheduleWaiting'])assert.equal(el.get(id).classList.contains('hidden'),true);
+  for(const id of ['scheduleList','scheduleListWaiting'])assert.equal(el.get(id).children.length,0);
+});
+
+test('missing schedule code and malformed or ended plans do not invent a gathering', () => {
+  const cases=[undefined,{...RadioSchedule,events:[
+    {title:'不正な日時',start:'not-a-date',end:'not-a-date'},
+    {title:'終了済み',start:'2020-01-01T22:00:00+09:00',end:'2020-01-01T22:15:00+09:00'}
+  ]}];
+  for(const schedule of cases){
+    const {elements:el,sockets}=bootstrap({RadioSchedule:schedule});
+    for(const id of ['scheduleHome','scheduleWaiting'])assert.equal(el.get(id).classList.contains('hidden'),true);
+    sockets[0].open();el.get('start').onclick();
+    assert.equal(sockets[0].sent.at(-1).type,'queue');
+  }
 });
 
 test('host creates a dedicated invite, copies that link, and loses it on disconnect',async()=>{
