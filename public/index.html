@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>もじもじラジオ｜声を出さずに雑談できる無料の文字チャット</title>
-<meta name="description" content="声を出さずに、知らない相手と文字だけで雑談。無料・登録不要の「もじもじラジオ」。ランダムな2人がMCになり、お題に沿って会話。リスナーとして読む・コメントすることもできます。">
+<meta name="description" content="声を出さずに、ふたりで文字だけの雑談。無料・登録不要の「もじもじラジオ」。友達を招待するか、知らない相手とマッチングして、お題に沿って会話できます。番組は読む・コメントする形でも参加できます。">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#100f1b">
 <link rel="canonical" href="https://yonayona-radio.onrender.com/">
@@ -12,9 +12,9 @@
 <link rel="apple-touch-icon" href="/icon.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="もじもじラジオ｜声を出さずに、5分だけ雑談。">
+<meta property="og:title" content="もじもじラジオ｜声を出さずに、ふたりで雑談。">
 <meta property="og:site_name" content="もじもじラジオ">
-<meta property="og:description" content="声を出さずに、知らない相手と文字だけで雑談。無料・登録不要の「もじもじラジオ」。ランダムな2人がMCになり、お題に沿って会話。リスナーとして読む・コメントすることもできます。">
+<meta property="og:description" content="友達を招待するか、知らない相手とマッチング。お題をきっかけに、ふたりで文字だけの雑談を楽しめます。無料・登録不要。招待も公開番組です。">
 <meta property="og:url" content="https://yonayona-radio.onrender.com/">
 <meta property="og:image" content="https://yonayona-radio.onrender.com/cover.png">
 <meta property="og:image:type" content="image/png">
@@ -23,8 +23,8 @@
 <meta property="og:image:alt" content="もじもじラジオ。声も顔出しもいらない、文字だけのラジオ。架空の会話例を掲載した紹介画像。">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@mojimoji_radio">
-<meta name="twitter:title" content="もじもじラジオ｜声を出さずに、5分だけ雑談。">
-<meta name="twitter:description" content="無料・登録不要。知らない2人で、お題に沿って文字だけの掛け合い。相手がいないときは待機になります。">
+<meta name="twitter:title" content="もじもじラジオ｜声を出さずに、ふたりで雑談。">
+<meta name="twitter:description" content="友達を招待するか、知らない相手とマッチング。無料・登録不要のお題つき文字雑談。招待も公開番組です。ランダム参加で相手がいないときは待機になります。">
 <meta name="twitter:image" content="https://yonayona-radio.onrender.com/cover.png">
 <meta name="twitter:image:alt" content="もじもじラジオの紹介。表示している会話は架空の例です。">
 <style>
@@ -32,25 +32,32 @@
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#100f1b;color:#f5f2ff}*{box-sizing:border-box}body{margin:0}main{max-width:640px;margin:auto;padding:18px 15px 90px}h1{font-size:25px;margin:4px 0}h2{font-size:18px;margin:0 0 12px}p{color:#b9b4c8;line-height:1.6}.muted{color:#a9a4ba;font-size:13px}.pill{display:inline-block;background:#34264b;color:#e7b7ff;padding:5px 10px;border-radius:100px;font-size:12px}.panel{background:#1c1a2c;border:1px solid #343044;border-radius:20px;padding:17px;margin-top:16px}.topic{background:#302441;border-radius:14px;padding:14px;margin:14px 0;font-weight:700}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.row.wrap{flex-wrap:wrap}button{background:#8061e6;color:white;border:0;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer}button.alt{background:#343047}button.danger{background:#70394f}button:disabled{opacity:.45}input{background:#151422;border:1px solid #4b455e;border-radius:12px;color:white;padding:12px;min-width:0;flex:1;font:inherit}.stack{display:grid;gap:9px}.room{display:block;text-align:left;width:100%;background:#28243a}.room small{display:block;color:#c3bdd4;margin-top:6px}.messages{height:300px;overflow-y:auto;background:#13121f;border-radius:13px;padding:12px;display:flex;flex-direction:column;gap:11px}.msg{padding:10px 12px;border-radius:12px;background:#29263b;line-height:1.5;overflow-wrap:anywhere}.msg.listener{background:#20202b;border-left:3px solid #77718c}.msg .by{font-size:12px;color:#bca7ff;margin-bottom:4px}.msg.listener .by{color:#b4b0c2}.hidden{display:none!important}#status{font-size:12px;color:#aaa5bf}#toast{min-height:20px;color:#ffc8bd;font-size:13px}.split{display:grid;grid-template-columns:1fr 1fr;gap:8px}.feedlabel{margin:13px 0 6px;color:#bbb5cf;font-size:13px}#chatInput{width:100%}.topline{margin-bottom:20px}footer{font-size:12px;color:#8c879e;margin-top:20px}
 a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #d9c8ff;outline-offset:4px}button{font:inherit;font-weight:700}button:disabled{cursor:default}.brand{display:flex;align-items:center;gap:11px}.brand img{width:45px;height:45px;border-radius:13px}.topline{margin-bottom:14px}.eyebrow{font-size:12px;letter-spacing:.07em;color:#cbb8ff;font-weight:700}.lead{font-size:27px;line-height:1.45;letter-spacing:.02em;margin:10px 0}.intro{margin:10px 0 16px}.benefits{display:flex;gap:6px;flex-wrap:wrap;margin:13px 0}.benefits span{font-size:12px;padding:5px 9px;border:1px solid #504363;border-radius:100px;color:#ece5ff}.wide{width:100%}.name-label{display:block;font-size:13px;color:#c3bdd4;margin:17px 0 7px}.start-note{font-size:12px;margin:8px 0 0}.howto{padding-left:22px;line-height:1.9;color:#c3bdd4;font-size:14px}.demo{border-top:1px solid #3d3450;margin-top:18px;padding-top:16px}.demo summary{cursor:pointer;font-weight:700;color:#e2d5ff;padding:4px 0}.demo-note{font-size:12px;color:#b7accb}.demo-messages{display:grid;gap:8px;margin:12px 0}.demo-messages .msg{font-size:14px}.sample-label{font-size:11px;color:#b8a4d6;letter-spacing:.05em}.invite{background:#2c2340;border:1px solid #675087;border-radius:14px;padding:13px;margin:18px 0}.invite h3{font-size:15px;margin:0 0 6px}.invite p{font-size:13px;margin:6px 0}.invite time{font-weight:700;color:#f0e4ff}.section-space{margin-top:24px}.share-box{border-top:1px solid #3d3450;margin-top:20px;padding-top:16px}.share-box p{font-size:13px;margin:0 0 10px}.share-copy{width:100%;margin-top:10px;font-size:12px}.faq details{border-top:1px solid #373044;padding:13px 0}.faq details:first-of-type{border-top:0}.faq summary{cursor:pointer;font-size:14px;font-weight:700}.faq p{font-size:13px;margin:9px 0 0}.footer-links{display:flex;flex-wrap:wrap;gap:15px;margin:12px 0}.notice{font-size:12px;line-height:1.7}.status-wrap{flex-shrink:0}#toast[role=status]{line-height:1.6}#waiting .share-box{margin-top:18px}@media(max-width:370px){main{padding:14px 12px 70px}.lead{font-size:24px}h1{font-size:23px}.panel{padding:15px}.brand img{width:39px;height:39px}}
 
+.participation-choices{display:grid;gap:12px;margin-top:16px}.start-choice{background:#211d33;border:1px solid #4a405e;border-radius:14px;padding:14px}.start-choice h3{font-size:16px;margin:0 0 7px;color:#f5f2ff}.start-choice p{font-size:13px;margin:7px 0 11px}.start-choice .start-note{font-size:12px;margin:8px 0 0}.participation-choices .invite{margin:0;background:#302443;border-color:#8768b4}.public-note{padding:10px 12px;border-left:3px solid #8f77bd;background:#211c30;border-radius:0 9px 9px 0;font-size:12px;margin:10px 0 0}.name-label{margin-top:13px}.name-help{font-size:12px;margin:7px 0 0}@media(min-width:540px){.participation-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.participation-choices.invited{grid-template-columns:1fr}}
 </style></head><body><main>
 <header class="topline row"><div class="brand"><img src="/icon.png" alt="" width="45" height="45"><div><h1>もじもじラジオ</h1><div class="muted">文字だけの、ふたりのラジオ。</div></div></div><div class="status-wrap" id="status" role="status">接続中…</div></header>
 <section class="panel" id="home" aria-labelledby="homeHeading">
 <div class="eyebrow">声も、顔出しも、いりません。</div>
-<h2 class="lead" id="homeHeading">声を出さずに、<br>5分だけ雑談。</h2>
-<p class="intro" id="homeIntro">知らない相手と2人でMCに。ランダムなお題から、文字だけの掛け合いを楽しめます。</p>
+<h2 class="lead" id="homeHeading">声を出さずに、<br>ふたりで雑談。</h2>
+<p class="intro" id="homeIntro">友達と、知らない相手と。お題をきっかけに、2人で文字だけの掛け合いを楽しめます。</p>
 <div class="benefits"><span>無料</span><span>登録不要</span><span>マイク・カメラ不要</span></div>
 <label for="name" class="name-label">ニックネーム</label>
-<div class="row"><input id="name" maxlength="18" placeholder="ニックネーム" value="匿名" autocomplete="off"><button id="saveName" class="alt">設定</button></div>
-<div id="randomControls"><div style="height:12px"></div><button id="start" class="wide">ランダムマッチング</button>
-<p class="muted start-note">2人そろうと開始します。相手がいないときは待機になります。時間制限はありません。</p>
-<p id="queueStatus" class="muted start-note" role="status">待機人数を確認中…</p>
-</div>
-<section class="invite" id="friendInvite" aria-labelledby="friendInviteHeading">
-<h3 id="friendInviteHeading">友達と2人で始める</h3>
-<div id="inviteCreator"><p>招待リンクを友達に送ると、リンクから参加した人と2人でMCになれます。</p><button id="createInvite" class="alt wide" disabled>招待リンクを作る</button><p id="inviteCreateStatus" class="muted" role="status"></p></div>
+<div class="row"><input id="name" maxlength="18" placeholder="ニックネーム" value="匿名" autocomplete="off" aria-describedby="nameHelp"><button id="saveName" class="alt">設定</button></div>
+<p id="nameHelp" class="muted name-help">「匿名」のままでも参加できます。入力した名前は参加するときに反映されます。</p>
+<p class="public-note" id="publicNote">始めた番組は公開されます。ほかの人も会話を読んだり、コメントしたりできます。時間制限はありません。</p>
+<div class="participation-choices" id="participationChoices">
+<section class="invite start-choice" id="friendInvite" aria-labelledby="friendInviteHeading">
+<h3 id="friendInviteHeading">友達と話す</h3>
+<div id="inviteCreator"><p id="inviteSteps">リンクを友達1人に送る → 相手が参加を押す → 2人でお題に沿って雑談。</p><button id="createInvite" class="wide" aria-describedby="inviteSteps inviteConditions publicNote" disabled>友達への招待リンクを作る</button><p id="inviteConditions" class="muted start-note">先着1名・30分有効。作成した画面を開いたまま待ちます。</p><p id="inviteCreateStatus" class="muted" role="status"></p></div>
 <div id="inviteOffer" class="hidden"><p id="inviteOfferStatus" role="status">招待を確認しています…</p><button id="joinInvite" class="wide" disabled>この招待で参加する</button><button id="clearInvite" class="alt wide" style="margin-top:8px">通常のホームへ</button></div>
-<p class="muted">リンクからMCとして参加できるのは先着1名です。招待で始めた番組も、ほかの人が読んだりコメントしたりできます。</p>
 </section>
+<section class="start-choice" id="randomControls" aria-labelledby="randomHeading">
+<h3 id="randomHeading">知らない人と話す</h3>
+<p id="randomSteps">相手を探す → 2人そろうと番組が始まる → お題で雑談。</p>
+<button id="start" class="alt wide" aria-describedby="randomSteps randomConditions queueStatus publicNote">相手を探して話す</button>
+<p id="randomConditions" class="muted start-note">ランダムな相方と組みます。相手がいないときは、この画面から待機に進みます。</p>
+<p id="queueStatus" class="muted start-note" role="status">待機人数を確認中…</p>
+</section>
+</div>
 <details class="demo" id="demo"><summary>ひとりで会話の雰囲気を見る</summary>
 <p class="demo-note">架空の会話例です。実際の放送や参加者ではありません。</p>
 <div class="topic"><div class="sample-label">会話例のお題</div><div id="demoTopic">一生無料になるなら何を選ぶ？</div></div>
@@ -60,7 +67,7 @@ a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-hig
 <div class="msg listener"><div class="by">リスナー（架空）</div><div>でも毎日ちょっとうれしいやつ。</div></div>
 </div><button id="demoNext" class="alt wide">別のお題の会話例を見る</button></details>
 <aside class="invite hidden" id="trialTimes" aria-labelledby="trialHeading"><h3 id="trialHeading">11/3、おためし集合時間</h3><p><time datetime="2026-11-03T12:30:00+09:00">昼 12:30〜13:00</time> ／ <time datetime="2026-11-03T21:00:00+09:00">夜 21:00〜21:30</time>（日本時間）</p><p>同じ時間に集まって、5分だけでもどうぞ。参加者同士のランダムマッチです。相手がいない場合は待機になります。</p></aside>
-<section class="invite" aria-labelledby="scheduleHeading"><h3 id="scheduleHeading">開催予定</h3><div id="scheduleList" role="status"><p>開催予定を確認中…</p></div><p>予定の時間にランダムマッチングを押してご参加ください。相手がいないときは待機になります。</p></section>
+<section class="invite" aria-labelledby="scheduleHeading"><h3 id="scheduleHeading">開催予定</h3><div id="scheduleList" role="status"><p>開催予定を確認中…</p></div><p>予定の時間に「相手を探して話す」を押してご参加ください。相手がいないときは待機になります。</p></section>
 <h2 class="section-space">放送中の番組</h2><p class="muted">番組があれば、リスナーとして読む・コメントすることもできます。</p><div id="rooms" class="stack"><p>放送中の番組を読み込み中…</p></div>
 <div class="share-box"><p>この雰囲気が好きそうな人に。</p><button id="shareHome" class="alt wide">もじもじラジオのリンクを共有</button><button id="copyHome" class="alt wide" style="margin-top:8px">リンクだけコピーする</button><label class="hidden" id="shareFallbackHome">コピーして共有できます<input class="share-copy" id="shareLinkHome" readonly value="https://yonayona-radio.onrender.com/?utm_source=share" aria-label="共有用リンク"></label><p id="shareStatusHome" class="muted" role="status"></p></div>
 </section>
@@ -77,21 +84,21 @@ a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-hig
 <section id="finished" class="panel hidden"><h2>番組が終了しました</h2><p id="endReason"></p><p class="muted">相互フォローは今後のバージョンで実装予定です。</p><button id="back">ホームに戻る</button></section>
 <p id="toast" role="status"></p>
 <section class="panel faq" aria-labelledby="faqHeading"><h2 id="faqHeading">はじめての方へ</h2>
-<details><summary>もじもじラジオって、どんなアプリ？</summary><p>音声を使わず、すべて文字でやりとりする雑談Webアプリです。ランダムに出会った2人がMCになり、お題に沿って会話します。インストール不要で、スマホやパソコンのブラウザーから利用できます。</p></details>
-<details><summary>どうやって始めるの？</summary><ol class="howto"><li>ニックネームを入れて「設定」を押します。</li><li>「ランダムマッチング」を押します。</li><li>相方が見つかったら、お題について文字で会話します。</li></ol><p>お題はMCが好きなときに変更できます。片方のMCが退出・切断すると番組が終了します。</p></details>
+<details><summary>もじもじラジオって、どんなアプリ？</summary><p>音声を使わず、すべて文字でやりとりする雑談Webアプリです。友達を招待するか、ランダムな相方と2人でMCになり、お題に沿って会話します。インストール不要で、スマホやパソコンのブラウザーから利用できます。</p></details>
+<details><summary>どうやって始めるの？</summary><ol class="howto"><li>ニックネームを決めます。「匿名」のままでも大丈夫です。</li><li>友達となら「友達への招待リンクを作る」を押し、相手にリンクを送ります。知らない相手となら「相手を探して話す」を押します。</li><li>2人そろったら、お題について文字で会話します。入力した名前は参加時に反映されます。</li></ol><p>どちらも公開番組です。お題はMCが好きなときに変更できます。片方のMCが退出・切断すると番組が終了します。</p></details>
 <details><summary>登録や料金、マイクは必要？</summary><p>無料・登録不要です。マイクやカメラも使いません。会話の時間制限はなく、短時間の参加でも大丈夫です。</p></details>
 <details><summary>人がいないときは？</summary><p>MCは2人の同時参加が必要です。相手がいないと待機になり、番組がないとリスナー参加もできません。「ひとりで会話の雰囲気を見る」では、いつでも架空の会話例を読めます。</p></details>
-<details><summary>友達を招待するには？</summary><p>「招待リンクを作る」を押して、表示されたリンクを友達に送ります。友達がリンクを開き、「この招待で参加する」を押すと2人で番組が始まります。リンクは1回限り・30分有効で、作成した画面を閉じたり接続が切れたりすると無効になります。招待した番組も公開番組です。</p></details>
+<details><summary>友達を招待するには？</summary><p>「友達への招待リンクを作る」を押して、表示されたリンクを友達に送ります。友達がリンクを開き、「この招待で参加する」を押すと2人で番組が始まります。リンクは先着1名・1回限り・30分有効で、作成した画面を閉じたり接続が切れたりすると無効になります。招待した番組も公開番組です。</p></details>
 <details><summary>会話は誰に見える？</summary><p>放送中の番組には、ほかの人がリスナーとして参加できます。MCの会話とリスナーコメントは、その番組の参加者に表示されます。氏名・連絡先・住所などの個人情報は投稿しないでください。</p></details>
 </section>
-<footer><p class="notice">改善のため、ページ表示・マッチング・会話成立の回数と流入元の分類を記録します。Cookie・氏名・会話本文はこの計測に記録しません。表示回数には再読み込みやボットを含む場合があります。</p><div class="footer-links"><a href="https://x.com/mojimoji_radio" target="_blank" rel="noopener noreferrer">公式X・お知らせ</a><a href="https://tsukutta.app/stories/user-87d21bdd/mojimoji-radio-guide" target="_blank" rel="noopener noreferrer">詳しい遊び方</a></div><p class="notice">試験版 v0.4.0 · ルーム情報はサーバー再起動時に消去されます。個人情報は投稿しないでください。</p></footer>
+<footer><p class="notice">改善のため、ページ表示・マッチング・会話成立の回数と流入元の分類を記録します。Cookie・氏名・会話本文はこの計測に記録しません。表示回数には再読み込みやボットを含む場合があります。</p><div class="footer-links"><a href="https://x.com/mojimoji_radio" target="_blank" rel="noopener noreferrer">公式X・お知らせ</a><a href="https://tsukutta.app/stories/user-87d21bdd/mojimoji-radio-guide" target="_blank" rel="noopener noreferrer">詳しい遊び方</a></div><p class="notice">試験版 v0.4.1 · ルーム情報はサーバー再起動時に消去されます。個人情報は投稿しないでください。</p></footer>
 </main><script src="/traffic.js"></script><script src="/schedule.js"></script><script>
 
 const $=id=>document.getElementById(id);
 const visitSource=RadioTraffic.source(location.search,document.referrer);
 function renderWaiting(value){const known=Number.isInteger(value)&&value>=0;$('queueStatus').textContent=known?'マッチング待機中 '+value+'人':'待機人数を確認中…';$('waitingCount').textContent=known?'マッチング待機中 '+value+'人（自分を含む）':'待機人数を確認中…'}
 renderWaiting(null);
-let ws,self=null,role=null,room=null,rooms=[],lastEnded=false;const show=id=>['home','waiting','inviteWaiting','live','finished'].forEach(k=>$(k).classList.toggle('hidden',k!==id));function notify(s){$('toast').textContent=s;setTimeout(()=>{if($('toast').textContent===s)$('toast').textContent=''},5000)}function send(o){if(ws?.readyState===1)ws.send(JSON.stringify(o));else notify('サーバーに接続されていません')}function text(el,value){el.textContent=value}function connect(){const protocol=location.protocol==='https:'?'wss':'ws';ws=new WebSocket(protocol+'://'+location.host+'/?utm_source='+visitSource);ws.onopen=()=>{$('status').textContent='接続中';send({type:'name',name:$('name').value});send({type:'list'});friendConnectionReady()};ws.onclose=()=>{friendDisconnected();renderWaiting(null);$('status').textContent='オフライン';if(room){room=null;show('finished');$('endReason').textContent='接続が切れました。番組は終了した可能性があります。'}else if(!$('waiting').classList.contains('hidden')){show('home');notify('接続が切れたため、マッチングを解除しました。再接続後にもう一度始めてください。')};setTimeout(connect,2500)};ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch{return}if(friendMessage(m))return;if(m.type==='identity'){self=m.id;$('status').textContent='オンライン'}if(m.type==='rooms'){rooms=m.rooms;renderRooms();renderWaiting(m.waitingCount)}if(m.type==='waiting')show('waiting');if(m.type==='cancelled')show('home');if(m.type==='joined'){role=m.role;room=m.room;show('live');$('role').textContent=role==='mc'?'MC · ON AIR':'リスナー · 視聴中';$('changeTopic').classList.toggle('hidden',role!=='mc');$('topic').textContent=room.topic;$('hosts').textContent=room.mcs.map(x=>x.name).join(' × ');$('count').textContent='リスナー '+room.listeners+'人';$('messages').replaceChildren();room.history.forEach(addMessage)}if(m.type==='chat')addMessage(m.item);if(m.type==='topic'){$('topic').textContent=m.topic;notify('お題が変更されました')}if(m.type==='listeners')$('count').textContent='リスナー '+m.count+'人';if(m.type==='ended'){room=null;show('finished');$('endReason').textContent=m.reason}if(m.type==='left'){room=null;show('home')}if(m.type==='error')notify(m.message)}}function renderRooms(){const root=$('rooms');root.replaceChildren();if(!rooms.length){const p=document.createElement('p');p.textContent='現在放送中の番組はありません。';root.append(p);return}rooms.forEach(r=>{const b=document.createElement('button');b.className='room';const a=document.createElement('strong');a.textContent=r.topic;const sub=document.createElement('small');sub.textContent=r.mcs.join(' × ')+' · リスナー '+r.listeners+'人';b.append(a,sub);b.onclick=()=>send({type:'watch',id:r.id});root.append(b)})}function addMessage(m){const div=document.createElement('div');div.className='msg '+(m.role==='listener'?'listener':'');const by=document.createElement('div');by.className='by';by.textContent=(m.role==='mc'?'MC':'リスナー')+' · '+m.name;const body=document.createElement('div');body.textContent=m.text;div.append(by,body);$('messages').append(div);$('messages').scrollTop=$('messages').scrollHeight}function post(){const v=$('chatInput').value.trim();if(!v)return;send({type:'chat',text:v});$('chatInput').value=''}$('saveName').onclick=()=>{send({type:'name',name:$('name').value});notify('ニックネームを設定しました')};$('start').onclick=()=>send({type:'queue'});$('cancel').onclick=()=>send({type:'cancel'});$('changeTopic').onclick=()=>send({type:'topic'});$('leave').onclick=()=>{if(confirm('番組から退出しますか？ MCが退出すると番組は終了します。'))send({type:'leave'})};$('send').onclick=post;$('chatInput').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)post()};$('back').onclick=()=>{show('home');send({type:'list'})};setInterval(()=>{if(room){const sec=Math.floor((Date.now()-room.started)/1000);$('elapsed').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}},1000);connect();
+let ws,self=null,role=null,room=null,rooms=[],lastEnded=false;const show=id=>['home','waiting','inviteWaiting','live','finished'].forEach(k=>$(k).classList.toggle('hidden',k!==id));function notify(s){$('toast').textContent=s;setTimeout(()=>{if($('toast').textContent===s)$('toast').textContent=''},5000)}function send(o){if(ws?.readyState===1)ws.send(JSON.stringify(o));else notify('サーバーに接続されていません')}function text(el,value){el.textContent=value}function connect(){const protocol=location.protocol==='https:'?'wss':'ws';ws=new WebSocket(protocol+'://'+location.host+'/?utm_source='+visitSource);ws.onopen=()=>{$('status').textContent='接続中';send({type:'name',name:$('name').value});send({type:'list'});friendConnectionReady()};ws.onclose=()=>{friendDisconnected();renderWaiting(null);$('status').textContent='オフライン';if(room){room=null;show('finished');$('endReason').textContent='接続が切れました。番組は終了した可能性があります。'}else if(!$('waiting').classList.contains('hidden')){show('home');notify('接続が切れたため、マッチングを解除しました。再接続後にもう一度始めてください。')};setTimeout(connect,2500)};ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch{return}if(friendMessage(m))return;if(m.type==='identity'){self=m.id;$('status').textContent='オンライン'}if(m.type==='rooms'){rooms=m.rooms;renderRooms();renderWaiting(m.waitingCount)}if(m.type==='waiting')show('waiting');if(m.type==='cancelled')show('home');if(m.type==='joined'){role=m.role;room=m.room;show('live');$('role').textContent=role==='mc'?'MC · ON AIR':'リスナー · 視聴中';$('changeTopic').classList.toggle('hidden',role!=='mc');$('topic').textContent=room.topic;$('hosts').textContent=room.mcs.map(x=>x.name).join(' × ');$('count').textContent='リスナー '+room.listeners+'人';$('messages').replaceChildren();room.history.forEach(addMessage)}if(m.type==='chat')addMessage(m.item);if(m.type==='topic'){$('topic').textContent=m.topic;notify('お題が変更されました')}if(m.type==='listeners')$('count').textContent='リスナー '+m.count+'人';if(m.type==='ended'){room=null;show('finished');$('endReason').textContent=m.reason}if(m.type==='left'){room=null;show('home')}if(m.type==='error')notify(m.message)}}function renderRooms(){const root=$('rooms');root.replaceChildren();if(!rooms.length){const p=document.createElement('p');p.textContent='現在放送中の番組はありません。';root.append(p);return}rooms.forEach(r=>{const b=document.createElement('button');b.className='room';const a=document.createElement('strong');a.textContent=r.topic;const sub=document.createElement('small');sub.textContent=r.mcs.join(' × ')+' · リスナー '+r.listeners+'人';b.append(a,sub);b.onclick=()=>send({type:'watch',id:r.id});root.append(b)})}function addMessage(m){const div=document.createElement('div');div.className='msg '+(m.role==='listener'?'listener':'');const by=document.createElement('div');by.className='by';by.textContent=(m.role==='mc'?'MC':'リスナー')+' · '+m.name;const body=document.createElement('div');body.textContent=m.text;div.append(by,body);$('messages').append(div);$('messages').scrollTop=$('messages').scrollHeight}function post(){const v=$('chatInput').value.trim();if(!v)return;send({type:'chat',text:v});$('chatInput').value=''}$('saveName').onclick=()=>{send({type:'name',name:$('name').value});notify('ニックネームを設定しました')};$('start').onclick=()=>{if(ws?.readyState!==1){notify('サーバーに接続されていません');return}send({type:'name',name:$('name').value});send({type:'queue'})};$('cancel').onclick=()=>send({type:'cancel'});$('changeTopic').onclick=()=>send({type:'topic'});$('leave').onclick=()=>{if(confirm('番組から退出しますか？ MCが退出すると番組は終了します。'))send({type:'leave'})};$('send').onclick=post;$('chatInput').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)post()};$('back').onclick=()=>{show('home');send({type:'list'})};setInterval(()=>{if(room){const sec=Math.floor((Date.now()-room.started)/1000);$('elapsed').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}},1000);connect();
 
 const demoCases=[
 {topic:'一生無料になるなら何を選ぶ？',lines:[['MC A（架空）','私は家賃。毎月かなり助かりそう。'],['MC B（架空）','私はアイス。家賃のあとに言うと急に小さい。'],['リスナー（架空）','でも毎日ちょっとうれしいやつ。','listener']]},
@@ -102,7 +109,7 @@ let demoIndex=0;
 $('demoNext').onclick=()=>{const sample=demoCases[demoIndex=(demoIndex+1)%demoCases.length];text($('demoTopic'),sample.topic);$('demoMessages').replaceChildren();sample.lines.forEach(([name,message,style])=>{const item=document.createElement('div');item.className='msg '+(style||'');const by=document.createElement('div');by.className='by';text(by,name);const body=document.createElement('div');text(body,message);item.append(by,body);$('demoMessages').append(item)})};
 const appUrl='https://yonayona-radio.onrender.com/?utm_source=share';
 async function copyApp(context){const status=$('shareStatus'+context);$('shareFallback'+context).classList.toggle('hidden',false);status.textContent='下のリンクを長押し、または選択してコピーできます。';try{if(typeof navigator!=='undefined'&&navigator.clipboard?.writeText){await navigator.clipboard.writeText(appUrl);status.textContent='リンクをコピーしました。好きな場所に貼り付けて共有できます。';return}}catch(error){}}
-async function shareApp(context){if(typeof navigator!=='undefined'&&navigator.share){try{await navigator.share({title:'もじもじラジオ',text:'声を出さずに、5分だけ雑談。無料・登録不要の文字ラジオ。',url:appUrl});return}catch(error){if(error.name==='AbortError')return}}return copyApp(context)}
+async function shareApp(context){if(typeof navigator!=='undefined'&&navigator.share){try{await navigator.share({title:'もじもじラジオ',text:'声を出さずに、ふたりで雑談。友達を招待するか、ランダムな相方と2人で。無料・登録不要の文字ラジオ。',url:appUrl});return}catch(error){if(error.name==='AbortError')return}}return copyApp(context)}
 $('shareHome').onclick=()=>shareApp('Home');$('shareWaiting').onclick=()=>shareApp('Waiting');$('copyHome').onclick=()=>copyApp('Home');$('copyWaiting').onclick=()=>copyApp('Waiting');
 function renderSchedule(){const root=$('scheduleList');root.replaceChildren();if(typeof RadioSchedule==='undefined'){const p=document.createElement('p');p.textContent='開催予定を読み込めませんでした。';root.append(p);return}const events=RadioSchedule.upcoming(RadioSchedule.events,Date.now());if(!events.length){const p=document.createElement('p');p.textContent='現在、開催予定はありません。';root.append(p);return}events.forEach(event=>{const item=document.createElement('p');const title=document.createElement('strong');title.textContent=event.title;const time=document.createElement('time');time.dateTime=event.start;time.textContent=RadioSchedule.format(event);item.append(title,document.createElement('br'),time);root.append(item)})}
 renderSchedule();setInterval(renderSchedule,60000);
@@ -115,10 +122,11 @@ let activeInvite=null,pendingInviteCreate=false;
 const defaultIntro=$('homeIntro').textContent;
 function renderInviteOffer(){
   const incoming=incomingInvite!==null;
+  $('participationChoices').classList.toggle('invited',incoming);
   $('inviteOffer').classList.toggle('hidden',!incoming);
   $('inviteCreator').classList.toggle('hidden',incoming);
   $('randomControls').classList.toggle('hidden',incoming);
-  $('friendInviteHeading').textContent=incoming?'友達からの招待':'友達と2人で始める';
+  $('friendInviteHeading').textContent=incoming?'友達からの招待':'友達と話す';
   $('homeIntro').textContent=incoming?'招待リンクから、友達と2人で文字だけの雑談を始められます。':defaultIntro;
 }
 function clearIncomingInvite(){

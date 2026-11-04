@@ -280,7 +280,7 @@ test('invite landing pages do not forward or cache their query token',async()=>{
   assert.equal(response.headers.get('referrer-policy'),'no-referrer');
   assert.equal(response.headers.get('cache-control'),'no-store');
   const html=await response.text();
-  assert.match(html,/友達と2人で始める/);
+  assert.match(html,/友達と話す/);
   assert.match(html,/先着1名/);
   assert.match(html,/公開番組/);
   assert.doesNotMatch(html,new RegExp('E'.repeat(24)));
