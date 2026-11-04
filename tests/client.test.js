@@ -23,7 +23,7 @@ function bootstrap(overrides = {}) {
     };
   }
   for (const match of html.matchAll(/id="([^"]+)"/g)) elements.set(match[1], element());
-  for (const id of ['waiting', 'live', 'finished']) elements.get(id).classList.toggle('hidden', true);
+  for (const id of ['waiting', 'inviteWaiting', 'live', 'finished', 'inviteOffer']) elements.get(id).classList.toggle('hidden', true);
   elements.get('name').value = 'テストMC';
   const sockets = [], timers = [];
   class FakeSocket {
@@ -37,7 +37,7 @@ function bootstrap(overrides = {}) {
     location: { protocol: 'https:', host: 'radio.example' },
     WebSocket: FakeSocket, confirm: () => true, RadioTraffic, RadioSchedule,
     setTimeout: (fn, delay) => timers.push({ fn, delay }),
-    setInterval: () => 1, Date, console, ...overrides
+    setInterval: () => 1, Date, URL, URLSearchParams, console, ...overrides
   }, { filename: 'public/index.html script' });
   return { elements, sockets, timers };
 }
@@ -143,4 +143,76 @@ test('schedule starts empty and renders only real configured events as text', ()
   const list=bootstrap({RadioSchedule:schedule}).elements.get('scheduleList');
   assert.equal(list.children[0].children[0].textContent,'<img src=x>');
   assert.match(list.children[0].children[2].textContent,/日本時間/);
+});
+
+test('host creates a dedicated invite, copies that link, and loses it on disconnect',async()=>{
+  let copied;
+  const {elements:el,sockets}=bootstrap({navigator:{clipboard:{writeText:async value=>{copied=value}}}});
+  const socket=sockets[0];socket.open();
+  el.get('name').value='招待した人';
+  el.get('createInvite').onclick();
+  assert.deepEqual(socket.sent.slice(-2).map(m=>m.type),['name','invite_create']);
+  assert.equal(socket.sent.at(-2).name,'招待した人');
+  const token='A'.repeat(24);
+  socket.message({type:'invite_created',token,expiresAt:Date.now()+60000});
+  assert.equal(el.get('inviteWaiting').classList.contains('hidden'),false);
+  assert.equal(el.get('waiting').classList.contains('hidden'),true);
+  await el.get('copyInvite').onclick();
+  assert.equal(copied,'https://radio.example/?invite='+token+'&utm_source=share');
+  assert.match(el.get('inviteShareStatus').textContent,/コピーしました/);
+  socket.readyState=3;socket.onclose();
+  assert.equal(el.get('inviteLink').value,'');
+  assert.equal(el.get('inviteWaiting').classList.contains('hidden'),true);
+  assert.equal(el.get('home').classList.contains('hidden'),false);
+  assert.match(el.get('inviteCreateStatus').textContent,/無効/);
+});
+
+test('recipient checks but never auto-joins, then joins explicitly and clears consumed token',()=>{
+  const token='B'.repeat(24);let replaced;
+  const {elements:el,sockets}=bootstrap({
+    location:{protocol:'https:',host:'radio.example',search:'?invite='+token+'&utm_source=share',href:'https://radio.example/?invite='+token+'&utm_source=share'},
+    history:{replaceState:(_a,_b,url)=>{replaced=url}}
+  });
+  const socket=sockets[0];socket.open();
+  assert.equal(socket.url,'wss://radio.example/?utm_source=share');
+  assert.equal(socket.sent.at(-1).type,'invite_check');
+  assert.equal(socket.sent.some(m=>m.type==='invite_join'),false);
+  assert.equal(el.get('randomControls').classList.contains('hidden'),true);
+  socket.message({type:'invite_ready',expiresAt:Date.now()+60000});
+  assert.equal(el.get('joinInvite').disabled,false);
+  el.get('name').value='招待された人';el.get('joinInvite').onclick();
+  assert.equal(socket.sent.at(-1).type,'invite_join');
+  assert.equal(socket.sent.at(-1).token,token);
+  assert.equal(socket.sent.at(-2).name,'招待された人');
+  socket.message({type:'joined',role:'mc',room:{id:'invite-room',mode:'invite',topic:'お題',started:Date.now(),mcs:[{name:'友達'},{name:'招待された人'}],listeners:0,history:[]}});
+  assert.equal(replaced,'/?utm_source=share');
+  assert.equal(el.get('live').classList.contains('hidden'),false);
+  assert.match(el.get('inviteLiveNote').textContent,/公開番組/);
+});
+
+test('invalid and expired invites show a recoverable message without random matching',()=>{
+  const invalid=bootstrap({location:{protocol:'https:',host:'radio.example',search:'?invite=broken'}});
+  invalid.sockets[0].open();
+  assert.equal(invalid.elements.get('joinInvite').disabled,true);
+  assert.match(invalid.elements.get('inviteOfferStatus').textContent,/形式/);
+  assert.equal(invalid.sockets[0].sent.some(m=>m.type==='invite_check'||m.type==='queue'),false);
+  invalid.elements.get('clearInvite').onclick();
+  assert.equal(invalid.elements.get('randomControls').classList.contains('hidden'),false);
+  const valid=bootstrap({location:{protocol:'https:',host:'radio.example',search:'?invite='+'C'.repeat(24)}});
+  valid.sockets[0].open();valid.sockets[0].message({type:'invite_error',message:'期限切れです'});
+  assert.equal(valid.elements.get('joinInvite').disabled,true);
+  assert.equal(valid.elements.get('inviteOfferStatus').textContent,'期限切れです');
+});
+
+test('invite copy failure never reports success and cancellation invalidates its UI',async()=>{
+  const {elements:el,sockets}=bootstrap({navigator:{clipboard:{writeText:async()=>{throw Error('Denied')}}}});
+  const socket=sockets[0];socket.open();el.get('createInvite').onclick();
+  socket.message({type:'invite_created',token:'D'.repeat(24),expiresAt:Date.now()+60000});
+  await el.get('copyInvite').onclick();
+  assert.match(el.get('inviteShareStatus').textContent,/リンク欄/);
+  assert.doesNotMatch(el.get('inviteShareStatus').textContent,/コピーしました/);
+  el.get('cancelInvite').onclick();assert.equal(socket.sent.at(-1).type,'cancel');
+  socket.message({type:'cancelled'});
+  assert.equal(el.get('home').classList.contains('hidden'),false);
+  assert.equal(el.get('inviteLink').value,'');
 });

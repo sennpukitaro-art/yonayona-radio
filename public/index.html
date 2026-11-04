@@ -37,13 +37,20 @@ a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-hig
 <section class="panel" id="home" aria-labelledby="homeHeading">
 <div class="eyebrow">声も、顔出しも、いりません。</div>
 <h2 class="lead" id="homeHeading">声を出さずに、<br>5分だけ雑談。</h2>
-<p class="intro">知らない相手と2人でMCに。ランダムなお題から、文字だけの掛け合いを楽しめます。</p>
+<p class="intro" id="homeIntro">知らない相手と2人でMCに。ランダムなお題から、文字だけの掛け合いを楽しめます。</p>
 <div class="benefits"><span>無料</span><span>登録不要</span><span>マイク・カメラ不要</span></div>
 <label for="name" class="name-label">ニックネーム</label>
 <div class="row"><input id="name" maxlength="18" placeholder="ニックネーム" value="匿名" autocomplete="off"><button id="saveName" class="alt">設定</button></div>
-<div style="height:12px"></div><button id="start" class="wide">ランダムマッチング</button>
+<div id="randomControls"><div style="height:12px"></div><button id="start" class="wide">ランダムマッチング</button>
 <p class="muted start-note">2人そろうと開始します。相手がいないときは待機になります。時間制限はありません。</p>
 <p id="queueStatus" class="muted start-note" role="status">待機人数を確認中…</p>
+</div>
+<section class="invite" id="friendInvite" aria-labelledby="friendInviteHeading">
+<h3 id="friendInviteHeading">友達と2人で始める</h3>
+<div id="inviteCreator"><p>招待リンクを友達に送ると、リンクから参加した人と2人でMCになれます。</p><button id="createInvite" class="alt wide" disabled>招待リンクを作る</button><p id="inviteCreateStatus" class="muted" role="status"></p></div>
+<div id="inviteOffer" class="hidden"><p id="inviteOfferStatus" role="status">招待を確認しています…</p><button id="joinInvite" class="wide" disabled>この招待で参加する</button><button id="clearInvite" class="alt wide" style="margin-top:8px">通常のホームへ</button></div>
+<p class="muted">リンクからMCとして参加できるのは先着1名です。招待で始めた番組も、ほかの人が読んだりコメントしたりできます。</p>
+</section>
 <details class="demo" id="demo"><summary>ひとりで会話の雰囲気を見る</summary>
 <p class="demo-note">架空の会話例です。実際の放送や参加者ではありません。</p>
 <div class="topic"><div class="sample-label">会話例のお題</div><div id="demoTopic">一生無料になるなら何を選ぶ？</div></div>
@@ -58,7 +65,15 @@ a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-hig
 <div class="share-box"><p>この雰囲気が好きそうな人に。</p><button id="shareHome" class="alt wide">もじもじラジオのリンクを共有</button><button id="copyHome" class="alt wide" style="margin-top:8px">リンクだけコピーする</button><label class="hidden" id="shareFallbackHome">コピーして共有できます<input class="share-copy" id="shareLinkHome" readonly value="https://yonayona-radio.onrender.com/?utm_source=share" aria-label="共有用リンク"></label><p id="shareStatusHome" class="muted" role="status"></p></div>
 </section>
 <section id="waiting" class="panel hidden"><h2>相方を探しています…</h2><p id="waitingCount" class="muted" role="status">待機人数を確認中…</p><p>ほかのMCが参加すると自動的に番組が始まります。この画面を開いたままお待ちください。</p><p class="muted">5分ほど待って相手が見つからないときは、一度キャンセルして、別の時間に試しても大丈夫です。</p><button id="cancel" class="alt">マッチングをやめる</button><div class="share-box"><p>参加を呼びかけたいときは、アプリのリンクを共有できます。</p><button id="shareWaiting" class="alt wide">リンクを共有する</button><button id="copyWaiting" class="alt wide" style="margin-top:8px">リンクだけコピーする</button><label class="hidden" id="shareFallbackWaiting">コピーして共有できます<input class="share-copy" id="shareLinkWaiting" readonly value="https://yonayona-radio.onrender.com/?utm_source=share" aria-label="待機中の共有用リンク"></label><p id="shareStatusWaiting" class="muted" role="status"></p><p class="muted">共有した人と必ず組める機能ではありません。</p></div></section>
-<section id="live" class="panel hidden"><div class="row"><span id="role" class="pill">ON AIR</span><span class="muted" id="elapsed">00:00</span></div><div class="topic"><div class="muted">今回のトークテーマ</div><div id="topic"></div></div><div class="row wrap"><div id="hosts" class="muted"></div><div id="count" class="muted">リスナー 0人</div></div><div class="row wrap" style="margin:14px 0"><button id="changeTopic" class="alt">お題を変更</button><button id="leave" class="danger">番組から退出</button></div><div class="feedlabel">MCの会話・リスナーコメント</div><div id="messages" class="messages" aria-live="polite"></div><div class="row" style="margin-top:12px"><input id="chatInput" maxlength="300" placeholder="メッセージを入力" aria-label="メッセージ"><button id="send">送信</button></div><p class="muted">リスナーのコメントを拾うかどうかはMCの自由です。</p></section>
+<section id="inviteWaiting" class="panel hidden" aria-labelledby="inviteWaitingHeading">
+<h2 id="inviteWaitingHeading">友達の参加を待っています</h2>
+<p>この画面を開いたまま、下のリンクを友達に送ってください。相手が「この招待で参加する」を押すと、2人の番組が始まります。</p>
+<label for="inviteLink" class="name-label">友達に送る招待リンク</label><input id="inviteLink" class="share-copy" readonly aria-label="友達に送る招待リンク">
+<div class="stack" style="margin-top:12px"><button id="copyInvite">招待リンクをコピー</button><button id="shareInvite" class="alt">招待リンクを共有</button><button id="cancelInvite" class="alt">招待を取り消す</button></div>
+<p id="inviteShareStatus" class="muted" role="status"></p><p id="inviteExpiry" class="muted"></p>
+<p class="muted">有効期限は作成から30分です。作成者の退出・再読み込み・接続切れや、サーバー再起動でも無効になります。番組はリスナーも参加できる公開番組です。</p>
+</section>
+<section id="live" class="panel hidden"><div class="row"><span id="role" class="pill">ON AIR</span><span class="muted" id="elapsed">00:00</span></div><div class="topic"><div class="muted">今回のトークテーマ</div><div id="topic"></div></div><div class="row wrap"><div id="hosts" class="muted"></div><div id="count" class="muted">リスナー 0人</div></div><div class="row wrap" style="margin:14px 0"><button id="changeTopic" class="alt">お題を変更</button><button id="leave" class="danger">番組から退出</button></div><p id="inviteLiveNote" class="muted"></p><div class="feedlabel">MCの会話・リスナーコメント</div><div id="messages" class="messages" aria-live="polite"></div><div class="row" style="margin-top:12px"><input id="chatInput" maxlength="300" placeholder="メッセージを入力" aria-label="メッセージ"><button id="send">送信</button></div><p class="muted">リスナーのコメントを拾うかどうかはMCの自由です。</p></section>
 <section id="finished" class="panel hidden"><h2>番組が終了しました</h2><p id="endReason"></p><p class="muted">相互フォローは今後のバージョンで実装予定です。</p><button id="back">ホームに戻る</button></section>
 <p id="toast" role="status"></p>
 <section class="panel faq" aria-labelledby="faqHeading"><h2 id="faqHeading">はじめての方へ</h2>
@@ -66,16 +81,17 @@ a{color:#cfbcff;text-underline-offset:3px}button,input,summary,a{-webkit-tap-hig
 <details><summary>どうやって始めるの？</summary><ol class="howto"><li>ニックネームを入れて「設定」を押します。</li><li>「ランダムマッチング」を押します。</li><li>相方が見つかったら、お題について文字で会話します。</li></ol><p>お題はMCが好きなときに変更できます。片方のMCが退出・切断すると番組が終了します。</p></details>
 <details><summary>登録や料金、マイクは必要？</summary><p>無料・登録不要です。マイクやカメラも使いません。会話の時間制限はなく、短時間の参加でも大丈夫です。</p></details>
 <details><summary>人がいないときは？</summary><p>MCは2人の同時参加が必要です。相手がいないと待機になり、番組がないとリスナー参加もできません。「ひとりで会話の雰囲気を見る」では、いつでも架空の会話例を読めます。</p></details>
+<details><summary>友達を招待するには？</summary><p>「招待リンクを作る」を押して、表示されたリンクを友達に送ります。友達がリンクを開き、「この招待で参加する」を押すと2人で番組が始まります。リンクは1回限り・30分有効で、作成した画面を閉じたり接続が切れたりすると無効になります。招待した番組も公開番組です。</p></details>
 <details><summary>会話は誰に見える？</summary><p>放送中の番組には、ほかの人がリスナーとして参加できます。MCの会話とリスナーコメントは、その番組の参加者に表示されます。氏名・連絡先・住所などの個人情報は投稿しないでください。</p></details>
 </section>
-<footer><p class="notice">改善のため、ページ表示・マッチング・会話成立の回数と流入元の分類を記録します。Cookie・氏名・会話本文はこの計測に記録しません。表示回数には再読み込みやボットを含む場合があります。</p><div class="footer-links"><a href="https://x.com/mojimoji_radio" target="_blank" rel="noopener noreferrer">公式X・お知らせ</a><a href="https://tsukutta.app/stories/user-87d21bdd/mojimoji-radio-guide" target="_blank" rel="noopener noreferrer">詳しい遊び方</a></div><p class="notice">試験版 v0.3.1 · ルーム情報はサーバー再起動時に消去されます。個人情報は投稿しないでください。</p></footer>
+<footer><p class="notice">改善のため、ページ表示・マッチング・会話成立の回数と流入元の分類を記録します。Cookie・氏名・会話本文はこの計測に記録しません。表示回数には再読み込みやボットを含む場合があります。</p><div class="footer-links"><a href="https://x.com/mojimoji_radio" target="_blank" rel="noopener noreferrer">公式X・お知らせ</a><a href="https://tsukutta.app/stories/user-87d21bdd/mojimoji-radio-guide" target="_blank" rel="noopener noreferrer">詳しい遊び方</a></div><p class="notice">試験版 v0.4.0 · ルーム情報はサーバー再起動時に消去されます。個人情報は投稿しないでください。</p></footer>
 </main><script src="/traffic.js"></script><script src="/schedule.js"></script><script>
 
 const $=id=>document.getElementById(id);
 const visitSource=RadioTraffic.source(location.search,document.referrer);
 function renderWaiting(value){const known=Number.isInteger(value)&&value>=0;$('queueStatus').textContent=known?'マッチング待機中 '+value+'人':'待機人数を確認中…';$('waitingCount').textContent=known?'マッチング待機中 '+value+'人（自分を含む）':'待機人数を確認中…'}
 renderWaiting(null);
-let ws,self=null,role=null,room=null,rooms=[],lastEnded=false;const show=id=>['home','waiting','live','finished'].forEach(k=>$(k).classList.toggle('hidden',k!==id));function notify(s){$('toast').textContent=s;setTimeout(()=>{if($('toast').textContent===s)$('toast').textContent=''},5000)}function send(o){if(ws?.readyState===1)ws.send(JSON.stringify(o));else notify('サーバーに接続されていません')}function text(el,value){el.textContent=value}function connect(){const protocol=location.protocol==='https:'?'wss':'ws';ws=new WebSocket(protocol+'://'+location.host+'/?utm_source='+visitSource);ws.onopen=()=>{$('status').textContent='接続中';send({type:'name',name:$('name').value});send({type:'list'})};ws.onclose=()=>{renderWaiting(null);$('status').textContent='オフライン';if(room){room=null;show('finished');$('endReason').textContent='接続が切れました。番組は終了した可能性があります。'}else if(!$('waiting').classList.contains('hidden')){show('home');notify('接続が切れたため、マッチングを解除しました。再接続後にもう一度始めてください。')};setTimeout(connect,2500)};ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch{return}if(m.type==='identity'){self=m.id;$('status').textContent='オンライン'}if(m.type==='rooms'){rooms=m.rooms;renderRooms();renderWaiting(m.waitingCount)}if(m.type==='waiting')show('waiting');if(m.type==='cancelled')show('home');if(m.type==='joined'){role=m.role;room=m.room;show('live');$('role').textContent=role==='mc'?'MC · ON AIR':'リスナー · 視聴中';$('changeTopic').classList.toggle('hidden',role!=='mc');$('topic').textContent=room.topic;$('hosts').textContent=room.mcs.map(x=>x.name).join(' × ');$('count').textContent='リスナー '+room.listeners+'人';$('messages').replaceChildren();room.history.forEach(addMessage)}if(m.type==='chat')addMessage(m.item);if(m.type==='topic'){$('topic').textContent=m.topic;notify('お題が変更されました')}if(m.type==='listeners')$('count').textContent='リスナー '+m.count+'人';if(m.type==='ended'){room=null;show('finished');$('endReason').textContent=m.reason}if(m.type==='left'){room=null;show('home')}if(m.type==='error')notify(m.message)}}function renderRooms(){const root=$('rooms');root.replaceChildren();if(!rooms.length){const p=document.createElement('p');p.textContent='現在放送中の番組はありません。';root.append(p);return}rooms.forEach(r=>{const b=document.createElement('button');b.className='room';const a=document.createElement('strong');a.textContent=r.topic;const sub=document.createElement('small');sub.textContent=r.mcs.join(' × ')+' · リスナー '+r.listeners+'人';b.append(a,sub);b.onclick=()=>send({type:'watch',id:r.id});root.append(b)})}function addMessage(m){const div=document.createElement('div');div.className='msg '+(m.role==='listener'?'listener':'');const by=document.createElement('div');by.className='by';by.textContent=(m.role==='mc'?'MC':'リスナー')+' · '+m.name;const body=document.createElement('div');body.textContent=m.text;div.append(by,body);$('messages').append(div);$('messages').scrollTop=$('messages').scrollHeight}function post(){const v=$('chatInput').value.trim();if(!v)return;send({type:'chat',text:v});$('chatInput').value=''}$('saveName').onclick=()=>{send({type:'name',name:$('name').value});notify('ニックネームを設定しました')};$('start').onclick=()=>send({type:'queue'});$('cancel').onclick=()=>send({type:'cancel'});$('changeTopic').onclick=()=>send({type:'topic'});$('leave').onclick=()=>{if(confirm('番組から退出しますか？ MCが退出すると番組は終了します。'))send({type:'leave'})};$('send').onclick=post;$('chatInput').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)post()};$('back').onclick=()=>{show('home');send({type:'list'})};setInterval(()=>{if(room){const sec=Math.floor((Date.now()-room.started)/1000);$('elapsed').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}},1000);connect();
+let ws,self=null,role=null,room=null,rooms=[],lastEnded=false;const show=id=>['home','waiting','inviteWaiting','live','finished'].forEach(k=>$(k).classList.toggle('hidden',k!==id));function notify(s){$('toast').textContent=s;setTimeout(()=>{if($('toast').textContent===s)$('toast').textContent=''},5000)}function send(o){if(ws?.readyState===1)ws.send(JSON.stringify(o));else notify('サーバーに接続されていません')}function text(el,value){el.textContent=value}function connect(){const protocol=location.protocol==='https:'?'wss':'ws';ws=new WebSocket(protocol+'://'+location.host+'/?utm_source='+visitSource);ws.onopen=()=>{$('status').textContent='接続中';send({type:'name',name:$('name').value});send({type:'list'});friendConnectionReady()};ws.onclose=()=>{friendDisconnected();renderWaiting(null);$('status').textContent='オフライン';if(room){room=null;show('finished');$('endReason').textContent='接続が切れました。番組は終了した可能性があります。'}else if(!$('waiting').classList.contains('hidden')){show('home');notify('接続が切れたため、マッチングを解除しました。再接続後にもう一度始めてください。')};setTimeout(connect,2500)};ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch{return}if(friendMessage(m))return;if(m.type==='identity'){self=m.id;$('status').textContent='オンライン'}if(m.type==='rooms'){rooms=m.rooms;renderRooms();renderWaiting(m.waitingCount)}if(m.type==='waiting')show('waiting');if(m.type==='cancelled')show('home');if(m.type==='joined'){role=m.role;room=m.room;show('live');$('role').textContent=role==='mc'?'MC · ON AIR':'リスナー · 視聴中';$('changeTopic').classList.toggle('hidden',role!=='mc');$('topic').textContent=room.topic;$('hosts').textContent=room.mcs.map(x=>x.name).join(' × ');$('count').textContent='リスナー '+room.listeners+'人';$('messages').replaceChildren();room.history.forEach(addMessage)}if(m.type==='chat')addMessage(m.item);if(m.type==='topic'){$('topic').textContent=m.topic;notify('お題が変更されました')}if(m.type==='listeners')$('count').textContent='リスナー '+m.count+'人';if(m.type==='ended'){room=null;show('finished');$('endReason').textContent=m.reason}if(m.type==='left'){room=null;show('home')}if(m.type==='error')notify(m.message)}}function renderRooms(){const root=$('rooms');root.replaceChildren();if(!rooms.length){const p=document.createElement('p');p.textContent='現在放送中の番組はありません。';root.append(p);return}rooms.forEach(r=>{const b=document.createElement('button');b.className='room';const a=document.createElement('strong');a.textContent=r.topic;const sub=document.createElement('small');sub.textContent=r.mcs.join(' × ')+' · リスナー '+r.listeners+'人';b.append(a,sub);b.onclick=()=>send({type:'watch',id:r.id});root.append(b)})}function addMessage(m){const div=document.createElement('div');div.className='msg '+(m.role==='listener'?'listener':'');const by=document.createElement('div');by.className='by';by.textContent=(m.role==='mc'?'MC':'リスナー')+' · '+m.name;const body=document.createElement('div');body.textContent=m.text;div.append(by,body);$('messages').append(div);$('messages').scrollTop=$('messages').scrollHeight}function post(){const v=$('chatInput').value.trim();if(!v)return;send({type:'chat',text:v});$('chatInput').value=''}$('saveName').onclick=()=>{send({type:'name',name:$('name').value});notify('ニックネームを設定しました')};$('start').onclick=()=>send({type:'queue'});$('cancel').onclick=()=>send({type:'cancel'});$('changeTopic').onclick=()=>send({type:'topic'});$('leave').onclick=()=>{if(confirm('番組から退出しますか？ MCが退出すると番組は終了します。'))send({type:'leave'})};$('send').onclick=post;$('chatInput').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)post()};$('back').onclick=()=>{show('home');send({type:'list'})};setInterval(()=>{if(room){const sec=Math.floor((Date.now()-room.started)/1000);$('elapsed').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}},1000);connect();
 
 const demoCases=[
 {topic:'一生無料になるなら何を選ぶ？',lines:[['MC A（架空）','私は家賃。毎月かなり助かりそう。'],['MC B（架空）','私はアイス。家賃のあとに言うと急に小さい。'],['リスナー（架空）','でも毎日ちょっとうれしいやつ。','listener']]},
@@ -92,5 +108,101 @@ function renderSchedule(){const root=$('scheduleList');root.replaceChildren();if
 renderSchedule();setInterval(renderSchedule,60000);
 function updateTrialTimes(){const now=Date.now();const start=Date.parse('2026-11-02T00:00:00+09:00');const end=Date.parse('2026-11-03T21:30:00+09:00');$('trialTimes').classList.toggle('hidden',now<start||now>=end)}
 updateTrialTimes();setInterval(updateTrialTimes,30000);
+
+// A received link never joins automatically: the recipient must choose to participate.
+let incomingInvite=new URLSearchParams(location.search||'').get('invite');
+let activeInvite=null,pendingInviteCreate=false;
+const defaultIntro=$('homeIntro').textContent;
+function renderInviteOffer(){
+  const incoming=incomingInvite!==null;
+  $('inviteOffer').classList.toggle('hidden',!incoming);
+  $('inviteCreator').classList.toggle('hidden',incoming);
+  $('randomControls').classList.toggle('hidden',incoming);
+  $('friendInviteHeading').textContent=incoming?'友達からの招待':'友達と2人で始める';
+  $('homeIntro').textContent=incoming?'招待リンクから、友達と2人で文字だけの雑談を始められます。':defaultIntro;
+}
+function clearIncomingInvite(){
+  incomingInvite=null;renderInviteOffer();
+  if(typeof history!=='undefined'&&history.replaceState){
+    const url=new URL(location.href||'/',location.protocol+'//'+location.host);
+    url.searchParams.delete('invite');history.replaceState(null,'',url.pathname+url.search+url.hash);
+  }
+}
+function friendConnectionReady(){
+  $('createInvite').disabled=false;
+  if(incomingInvite===null)return;
+  $('joinInvite').disabled=true;$('clearInvite').disabled=false;
+  if(!/^[A-Za-z0-9_-]{24}$/.test(incomingInvite)){
+    $('inviteOfferStatus').textContent='招待リンクの形式が正しくありません。友達に新しいリンクをもらってください。';return;
+  }
+  $('inviteOfferStatus').textContent='招待を確認しています…';
+  send({type:'invite_check',token:incomingInvite});
+}
+function friendDisconnected(){
+  $('createInvite').disabled=true;$('joinInvite').disabled=true;$('clearInvite').disabled=false;
+  if(activeInvite||pendingInviteCreate){
+    activeInvite=null;pendingInviteCreate=false;$('inviteLink').value='';show('home');
+    $('inviteCreateStatus').textContent='接続が切れたため、招待リンクは無効になりました。再接続後に新しく作成してください。';
+  }
+  if(incomingInvite!==null)$('inviteOfferStatus').textContent='接続が切れました。再接続後に招待を確認します。';
+}
+function friendMessage(m){
+  if(m.type==='invite_created'){
+    if(typeof m.token!=='string'||!/^[A-Za-z0-9_-]{24}$/.test(m.token)||!Number.isFinite(m.expiresAt))return true;
+    const url=new URL('/',location.protocol+'//'+location.host);
+    url.searchParams.set('invite',m.token);url.searchParams.set('utm_source','share');
+    activeInvite={url:url.href,expiresAt:m.expiresAt};pendingInviteCreate=false;
+    $('inviteLink').value=activeInvite.url;$('inviteShareStatus').textContent='';
+    $('inviteExpiry').textContent='有効期限：'+new Date(m.expiresAt).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit'})+'（日本時間）';
+    $('createInvite').disabled=false;show('inviteWaiting');return true;
+  }
+  if(m.type==='invite_ready'){
+    if(incomingInvite!==null){$('inviteOfferStatus').textContent='友達が待っています。ニックネームを決めて参加してください。';$('joinInvite').disabled=false}return true;
+  }
+  if(m.type==='invite_error'){
+    const message=typeof m.message==='string'?m.message:'招待を確認できませんでした。';
+    if(activeInvite||pendingInviteCreate){activeInvite=null;pendingInviteCreate=false;$('inviteLink').value='';show('home');$('inviteCreateStatus').textContent=message;$('createInvite').disabled=ws?.readyState!==1}
+    else if(incomingInvite!==null){$('inviteOfferStatus').textContent=message;$('joinInvite').disabled=true;$('clearInvite').disabled=false}
+    else notify(message);
+    return true;
+  }
+  if(m.type==='cancelled'&&activeInvite){activeInvite=null;$('inviteLink').value='';$('inviteCreateStatus').textContent='招待を取り消しました。'}
+  if(m.type==='joined'){
+    activeInvite=null;pendingInviteCreate=false;$('inviteLink').value='';
+    if(incomingInvite!==null)clearIncomingInvite();
+    $('inviteLiveNote').textContent=m.room?.mode==='invite'?'招待で始めた公開番組です。ほかの人もリスナーとして参加できます。':'';
+  }
+  return false;
+}
+$('createInvite').onclick=()=>{
+  if(ws?.readyState!==1){notify('サーバーに接続されていません');return}
+  pendingInviteCreate=true;$('createInvite').disabled=true;$('inviteCreateStatus').textContent='招待リンクを作成しています…';
+  send({type:'name',name:$('name').value});send({type:'invite_create'});
+};
+$('joinInvite').onclick=()=>{
+  if(incomingInvite===null||ws?.readyState!==1)return;
+  $('joinInvite').disabled=true;$('clearInvite').disabled=true;$('inviteOfferStatus').textContent='参加しています…';
+  send({type:'name',name:$('name').value});send({type:'invite_join',token:incomingInvite});
+};
+$('clearInvite').onclick=clearIncomingInvite;
+$('cancelInvite').onclick=()=>send({type:'cancel'});
+function usableInvite(){
+  if(!activeInvite||activeInvite.expiresAt<=Date.now()){
+    friendMessage({type:'invite_error',message:'招待リンクの有効期限が切れました。新しいリンクを作成してください。'});return null;
+  }
+  return activeInvite.url;
+}
+async function copyFriendInvite(){
+  const url=usableInvite();if(!url)return;
+  $('inviteShareStatus').textContent='リンク欄を長押し、または選択してコピーできます。';
+  try{if(typeof navigator!=='undefined'&&navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);if(activeInvite?.url===url)$('inviteShareStatus').textContent='招待リンクをコピーしました。友達に送って、この画面でお待ちください。'}}catch(error){}
+}
+$('copyInvite').onclick=copyFriendInvite;
+$('shareInvite').onclick=async()=>{
+  const url=usableInvite();if(!url)return;
+  if(typeof navigator!=='undefined'&&navigator.share){try{await navigator.share({title:'もじもじラジオへの招待',text:'2人で文字だけの雑談をしませんか。無料・登録不要。番組はほかの人も読める公開番組です。',url});return}catch(error){if(error.name==='AbortError')return}}
+  return copyFriendInvite();
+};
+renderInviteOffer();
 
 </script></body></html>
