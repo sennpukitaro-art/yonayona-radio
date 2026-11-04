@@ -67,7 +67,62 @@ Node.js 18以上で `npm install` → `npm start` → http://localhost:3000
 - 新しい分析サービスや有料契約、追加のAPIキーは不要です。独自のサーバーログの集計で、計測専用の公開エンドポイントは設けていません。
 - `npm test` と `python3 -m unittest discover -s tests -p 'test_*.py'` で通信、待機人数、計測の内容、日付集計を確認できます。
 
-## 開催予定
+## 集客レポートを手元で比較する
+
+Python 3.9以上の標準ライブラリだけで、CSVまたは書き出したテキストログからHTMLを作れます。追加料金・分析サービス・APIキー・公開管理画面は不要です。生成したHTMLをPCまたはスマートフォンのJavaScript対応ブラウザーで開いてください。通信もサーバー起動も不要です。スマートフォンでは、HTMLをブラウザーに渡せる環境が必要です。ファイルのプレビューアーではJavaScriptが動かない場合があります。
+
+既存の4列CSVを読み込む場合：
+
+```bash
+python3 scripts/metrics_report.py metrics.csv -o reports/metrics-report.html
+```
+
+Render等から書き出したテキストログを直接読み込む場合：
+
+```bash
+python3 scripts/metrics_report.py server.log -o reports/metrics-report.html
+```
+
+既存の集計コマンドから渡すこともできます：
+
+```bash
+python3 scripts/summarize_metrics.py server.log | python3 scripts/metrics_report.py - -o reports/metrics-report.html
+```
+
+入力形式は自動判定します。必要なら `--format csv` または `--format log` で明示できます。CSVは列の順序が異なっても、`date_jst,source,event,count` の4列に対応します。UTF-8（BOM付きも可）を使用してください。不正な日付・負数・小数・不明なイベント・JavaScriptで正確に表せない大きな合計値はエラーにし、既存の出力を更新しません。ログは既存の集計処理を利用し、起動メッセージや壊れた行、計測対象でないイベントを無視します。Render APIのJSONラッパーではなく、JSONイベントが行ごとに含まれるテキストログが対象です。
+
+画面では日付範囲・流入元を絞り込み、4種類の合計、日別グラフ、流入元別・日別・日付×流入元の比較を確認できます。「比較CSVを保存」は選択した範囲を6列（`date_jst,source,page_view,matching_attempt,matched_participant,conversation_participant`）で保存します。既存集計の4列CSVとは形式が異なり、レポートへの再入力用ではありません。
+
+### 数字の意味と制約
+
+| 表示 | 記録イベント | 数える単位 |
+| --- | --- | --- |
+| ページ表示 | `page_view` | 成功したホームのGET要求ごと |
+| マッチング開始 | `matching_attempt` | 待機開始、招待作成・参加ごと（やり直しを含む） |
+| マッチング成立 | `matched_participant` | 成立したMC接続ごと（1番組で2件） |
+| 会話成立 | `conversation_participant` | 双方が投稿した番組のMC接続ごと（1番組で2件） |
+| 補足：会話成立の番組数 | `conversation` | 1番組で1件、全流入元の合計と日別表で表示 |
+
+- **どれもユニーク利用者数ではありません。** 同一人物・ボット・運営アクセスを区別しません。割合やコンバージョン率、実人数は表示しません。
+- 流入元の異なる2接続で番組が成立するため、流入元別の会話成立件数を2で割って番組数を求めることはできません。`conversation` の全体記録を流入元別に配分することもしません。
+- ページと接続の流入元が異なる場合や、開始・成立・会話の日が異なる場合があります。ランダムと招待も同じイベントなので区別できません。同じ人の段階別の歩留まりとして解釈しないでください。
+- 保存できた記録だけを対象にします。ログの欠落・部分的な日付・計測開始前は補えません。記録のない日は自動で0件の日として補完しません。表の0件も「保存データに該当イベントの記録なし」の意味です。データがない範囲は「対象の記録がありません」と表示します。
+- 重複する期間のCSV・ログを混ぜると重複計上します。匿名集計なのでイベントの重複排除はできません。CSVで同じ日付・流入元・イベントの行が複数ある場合は加算します。
+- レポートには日付・正規化した流入元・イベント・件数だけを埋め込み、元ログの本文・識別情報・ファイルパスは含めません。HTMLは記録を持つファイルなので、共有した相手も集計を閲覧できます。
+- 出力先は `reports/` を推奨します。このディレクトリーはGitの対象外です。`public/` には置かないでください。コードだけでは実際の本番アクセス数は分かりません。
+
+### サンプルと検証
+
+```bash
+python3 scripts/metrics_report.py tests/fixtures/metrics-summary.csv --sample -o reports/sample-report.html
+python3 scripts/metrics_report.py tests/fixtures/metrics-export.txt --sample -o reports/sample-from-log.html
+python3 -m unittest discover -s tests -p 'test_*.py'
+npm test
+```
+
+`--sample` を付けると画面・タイトル・保存CSVのファイル名にサンプルであることを示します。上記2入力は同じ架空データです。期待する全体件数はページ表示16、マッチング開始10、成立8、会話成立6（参加接続ごと）、会話成立の番組数3です。11月4日のdirectは開始1件・成立2件で、日をまたぐ成立などにより単純な割り算が成果率を表さない例を含みます。サンプルは本番の利用実績ではありません。
+
+## 開催予定の編集
 
 ホームの「開催予定」は `public/schedule.js` の `events` 配列で管理します。開催が決まった場合だけ、例の書式でタイトル・開始・終了をタイムゾーン付きで追加してください。時刻は日本時間で表示し、終了後の予定は自動で非表示になります。空の配列なら「現在、開催予定はありません」と表示します。配列の編集を公開するには通常のデプロイが必要です。
 
