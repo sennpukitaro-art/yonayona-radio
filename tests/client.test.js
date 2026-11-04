@@ -156,6 +156,7 @@ test('host creates a dedicated invite, copies that link, and loses it on disconn
   const token='A'.repeat(24);
   socket.message({type:'invite_created',token,expiresAt:Date.now()+60000});
   assert.equal(el.get('inviteWaiting').classList.contains('hidden'),false);
+  assert.equal(el.get('inviteCreateStatus').textContent,'');
   assert.equal(el.get('waiting').classList.contains('hidden'),true);
   await el.get('copyInvite').onclick();
   assert.equal(copied,'https://radio.example/?invite='+token+'&utm_source=share');

@@ -151,7 +151,7 @@ function friendMessage(m){
     if(typeof m.token!=='string'||!/^[A-Za-z0-9_-]{24}$/.test(m.token)||!Number.isFinite(m.expiresAt))return true;
     const url=new URL('/',location.protocol+'//'+location.host);
     url.searchParams.set('invite',m.token);url.searchParams.set('utm_source','share');
-    activeInvite={url:url.href,expiresAt:m.expiresAt};pendingInviteCreate=false;
+    activeInvite={url:url.href,expiresAt:m.expiresAt};pendingInviteCreate=false;$('inviteCreateStatus').textContent='';
     $('inviteLink').value=activeInvite.url;$('inviteShareStatus').textContent='';
     $('inviteExpiry').textContent='有効期限：'+new Date(m.expiresAt).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit'})+'（日本時間）';
     $('createInvite').disabled=false;show('inviteWaiting');return true;
