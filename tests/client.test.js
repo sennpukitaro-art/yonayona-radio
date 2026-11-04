@@ -47,8 +47,10 @@ test('home controls initialize, send matching requests, and recover after a wait
   assert.equal(sockets[0].url, 'wss://radio.example/?utm_source=direct');
   sockets[0].open();
   assert.equal(el.get('status').textContent, 'オンライン');
+  el.get('name').value = '設定を押さずに参加';
   el.get('start').onclick();
-  assert.equal(sockets[0].sent.at(-1).type, 'queue');
+  assert.deepEqual(sockets[0].sent.slice(-2).map(message => message.type), ['name', 'queue']);
+  assert.equal(sockets[0].sent.at(-2).name, '設定を押さずに参加');
   sockets[0].message({ type: 'waiting' });
   assert.equal(el.get('waiting').classList.contains('hidden'), false);
   sockets[0].readyState = 3;
