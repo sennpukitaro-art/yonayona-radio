@@ -1,0 +1,22 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
+const {spawnSync}=require('node:child_process');
+const {createArchive}=require('../conversation-archive');
+test('CLI creates a private offline HTML and rejects wrong keys or overwrites without leaking text',t=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'radio-archive-test-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+ const key='33'.repeat(32),lines=[],archive=createArchive(key,x=>lines.push(x));
+ const r={mcs:['a','b'],mode:'random',topic:'架空のお題'};
+ archive.start(r,{archiveConsent:true},{archiveConsent:true});archive.message(r,{id:'a',role:'mc'},'これは架空のサンプルです');archive.stop(r);
+ const keyFile=path.join(dir,'local.key'),input=path.join(dir,'export.log'),output=path.join(dir,'report.html');
+ fs.writeFileSync(keyFile,key);fs.writeFileSync(input,lines.join('\n'));
+ const args=[path.join(__dirname,'../scripts/read_conversations.js'),'--key-file',keyFile,input,output];
+ const first=spawnSync(process.execPath,args,{encoding:'utf8'});assert.equal(first.status,0,first.stderr);
+ assert.match(fs.readFileSync(output,'utf8'),/これは架空のサンプルです/);
+ if(process.platform!=='win32')assert.equal(fs.statSync(output).mode&0o777,0o600);
+ const original=fs.readFileSync(output,'utf8');
+ const second=spawnSync(process.execPath,args,{encoding:'utf8'});assert.equal(second.status,1);assert.equal(fs.readFileSync(output,'utf8'),original);
+ fs.writeFileSync(keyFile,'44'.repeat(32));
+ args[4]=path.join(dir,'wrong.html');const bad=spawnSync(process.execPath,args,{encoding:'utf8'});
+ assert.equal(bad.status,1);assert.equal(fs.existsSync(args[4]),false);
+ assert.doesNotMatch(first.stdout+first.stderr+second.stdout+second.stderr+bad.stdout+bad.stderr,/架空|333333|444444/);
+});

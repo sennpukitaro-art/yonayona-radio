@@ -265,3 +265,34 @@ test('invite copy failure never reports success and cancellation invalidates its
   assert.equal(el.get('home').classList.contains('hidden'),false);
   assert.equal(el.get('inviteLink').value,'');
 });
+
+
+test('archive consent is optional, sent on explicit participation, reset per room, and cleared on reconnect',()=>{
+  const {elements:el,sockets}=bootstrap(),ws=sockets[0];ws.open();
+  assert.equal(el.get('archiveChoice').classList.contains('hidden'),false); // mock initial classes are empty
+  ws.message({type:'identity',id:'self',archiveAvailable:false});
+  assert.equal(el.get('archiveChoice').classList.contains('hidden'),true);
+  el.get('archiveConsent').checked=true;el.get('start').onclick();
+  assert.equal(ws.sent.at(-1).archiveConsent,false);
+  ws.message({type:'identity',id:'self',archiveAvailable:true});
+  assert.equal(el.get('archiveChoice').classList.contains('hidden'),false);
+  el.get('start').onclick();assert.equal(ws.sent.at(-1).archiveConsent,true);
+  ws.message({type:'joined',role:'mc',room:{id:'test',archiveRecording:true,topic:'お題',started:Date.now(),mcs:[{name:'A'},{name:'B'}],listeners:0,history:[]}});
+  assert.match(el.get('archiveStatus').textContent,/保存中/);
+  assert.equal(el.get('archiveConsent').checked,false);
+  assert.equal(el.get('stopArchive').classList.contains('hidden'),false);
+  el.get('stopArchive').onclick();assert.equal(ws.sent.at(-1).type,'archive_stop');
+  ws.message({type:'archive_status',recording:false});
+  assert.equal(el.get('stopArchive').classList.contains('hidden'),true);
+  assert.match(el.get('toast').textContent,/保存済みの発言は削除されません/);
+  el.get('archiveConsent').checked=true;ws.onclose();
+  assert.equal(el.get('archiveConsent').checked,false);
+  assert.equal(el.get('archiveChoice').classList.contains('hidden'),true);
+});
+
+test('listeners see recording status but cannot use the MC stop control',()=>{
+ const {elements:el,sockets}=bootstrap(),ws=sockets[0];ws.open();
+ ws.message({type:'joined',role:'listener',room:{id:'test',archiveRecording:true,topic:'お題',started:Date.now(),mcs:[{name:'A'},{name:'B'}],listeners:0,history:[]}});
+ assert.match(el.get('archiveStatus').textContent,/リスナーコメントは保存対象外/);
+ assert.equal(el.get('stopArchive').classList.contains('hidden'),true);
+});
