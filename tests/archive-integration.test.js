@@ -1,0 +1,46 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const {spawn}=require('node:child_process');
+const {once}=require('node:events');
+const path=require('node:path');
+const WebSocket=require('ws');
+const {readRecords}=require('../scripts/read_conversations');
+const keyHex='22'.repeat(32);
+test('real sockets archive only consenting pairs, exclude listeners, stop on request, and reset consent on re-entry',async t=>{
+  const child=spawn(process.execPath,['server.js'],{cwd:path.join(__dirname,'..'),env:{...process.env,PORT:'0',RADIO_ARCHIVE_KEY:keyHex},stdio:['ignore','pipe','pipe']});
+  let output='';child.stdout.on('data',b=>output+=b);child.stderr.on('data',()=>{});
+  t.after(async()=>{const exited=once(child,'exit');child.kill();await exited});
+  const wait=async predicate=>{for(let i=0;i<200;i++){if(predicate())return;await new Promise(r=>setTimeout(r,20))}throw Error('Timed out')};
+  await wait(()=>/localhost:\d+/.test(output));const base='ws://127.0.0.1:'+output.match(/localhost:(\d+)/)[1];
+  const clients=[];
+  function client(){
+    const ws=new WebSocket(base),inbox=[];ws.on('message',x=>inbox.push(JSON.parse(x)));clients.push(ws);
+    return {send:x=>ws.send(JSON.stringify(x)),next:async type=>{await wait(()=>inbox.some(x=>x.type===type));return inbox.splice(inbox.findIndex(x=>x.type===type),1)[0]}};
+  }
+  t.after(()=>clients.forEach(ws=>ws.terminate()));
+  const a=client(),b=client(),listener=client();
+  for(const c of [a,b,listener])assert.equal((await c.next('identity')).archiveAvailable,true);
+  a.send({type:'queue',archiveConsent:true});await a.next('waiting');b.send({type:'queue'});
+  assert.equal((await a.next('joined')).room.archiveRecording,false);await b.next('joined');
+  a.send({type:'chat',text:'非同意番組の本文'});await b.next('chat');a.send({type:'leave'});await a.next('left');await b.next('ended');
+  a.send({type:'name',name:'非保存ニックネーム'});await a.next('identity');
+  a.send({type:'invite_create',archiveConsent:true});const link=await a.next('invite_created');
+  b.send({type:'invite_join',token:link.token,archiveConsent:true});
+  const joined=await a.next('joined');assert.equal(joined.room.archiveRecording,true);await b.next('joined');
+  listener.send({type:'watch',id:joined.room.id,archiveConsent:true});await listener.next('joined');
+  await new Promise(r=>setTimeout(r,1050));
+  a.send({type:'chat',text:'同意したMC甲の本文'});await b.next('chat');b.send({type:'chat',text:'同意したMC乙の本文'});await a.next('chat');
+  listener.send({type:'chat',text:'リスナーの非保存本文'});await a.next('chat');
+  listener.send({type:'archive_stop'});b.send({type:'archive_stop'});
+  const stopped=await a.next('archive_status');assert.equal(stopped.recording,false);
+  await new Promise(r=>setTimeout(r,1050));a.send({type:'chat',text:'保存停止後の本文'});await b.next('chat');
+  a.send({type:'leave'});await a.next('left');await b.next('ended');await listener.next('ended');
+  a.send({type:'queue'});await a.next('waiting');b.send({type:'queue'});
+  assert.equal((await a.next('joined')).room.archiveRecording,false);await b.next('joined');
+  const envelopes=()=>output.split('\n').filter(x=>x.includes('"type":"radio_transcript"'));
+  await wait(()=>envelopes().length===4);
+  const rows=readRecords(envelopes(),Buffer.from(keyHex,'hex'));
+  assert.deepEqual(rows.filter(x=>x.event==='message').map(x=>x.text),['同意したMC甲の本文','同意したMC乙の本文']);
+  assert.equal(rows.at(-1).reason,'opt_out');
+  assert.doesNotMatch(output,/非保存ニックネーム|同意したMC|非同意番組の本文|保存停止後の本文|リスナーの非保存本文/);
+});

@@ -6,3 +6,8 @@ coverage/
 !.env.example
 __pycache__/
 reports/
+
+# Local conversation exports and private decryption material
+*.key
+*.pem
+conversation-exports/
