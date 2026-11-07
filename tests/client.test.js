@@ -19,7 +19,8 @@ function bootstrap(overrides = {}) {
         contains(name) { return classes.has(name); }
       },
       append(...children) { this.children.push(...children); },
-      replaceChildren(...children) { this.children = children; }
+      replaceChildren(...children) { this.children = children; },
+      removeAttribute(name) { delete this[name]; }
     };
   }
   for (const match of html.matchAll(/id="([^"]+)"/g)) elements.set(match[1], element());
@@ -32,13 +33,16 @@ function bootstrap(overrides = {}) {
     message(data) { this.onmessage({ data: JSON.stringify(data) }); }
     open() { this.readyState = 1; this.onopen(); this.message({ type: 'identity', id: 'self' }); }
   }
-  vm.runInNewContext(script, {
+  const sandbox = {
     document: { getElementById: id => elements.get(id), createElement: element },
     location: { protocol: 'https:', host: 'radio.example' },
     WebSocket: FakeSocket, confirm: () => true, RadioTraffic, RadioSchedule,
     setTimeout: (fn, delay) => timers.push({ fn, delay }),
     setInterval: (fn, delay) => { intervals.push({ fn, delay }); return intervals.length; }, Date, URL, URLSearchParams, console, ...overrides
-  }, { filename: 'public/index.html script' });
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/answer-cards.js'), 'utf8'), sandbox, {filename:'public/answer-cards.js'});
+  vm.runInContext(script, sandbox, { filename: 'public/index.html script' });
   return { elements, sockets, timers, intervals };
 }
 
@@ -61,6 +65,24 @@ test('home controls initialize, send matching requests, and recover after a wait
   timers.find(timer => timer.delay === 2500).fn();
   sockets[1].open();
   assert.deepEqual(sockets[1].sent.map(message => message.type), ['name', 'list']);
+});
+
+test('shared topic landing selects the matching sample without joining or taking an answer from the URL', () => {
+  const {elements:el,sockets}=bootstrap({location:{protocol:'https:',host:'radio.example',search:'?topic=holiday&utm_source=share&answer=private'}});
+  assert.equal(el.get('demoTopic').textContent,'自分だけの祝日を作るなら？');
+  assert.equal(el.get('answerInput').value,'');
+  assert.equal(el.get('answerCard').classList.contains('hidden'),false);
+  sockets[0].open();
+  const before=sockets[0].sent.length;
+  el.get('answerInput').value='休憩の日';el.get('answerInput').oninput();
+  assert.equal(sockets[0].sent.length,before);
+  assert.equal(sockets[0].sent.some(message=>['queue','invite_create','invite_join','chat'].includes(message.type)),false);
+  el.get('demoNext').onclick();assert.equal(el.get('demoTopic').textContent,'無人島に一つだけ持っていくなら？');
+});
+
+test('unknown shared topic falls back to the initial sample', () => {
+  const {elements:el}=bootstrap({location:{protocol:'https:',host:'radio.example',search:'?topic=<script>'}});
+  assert.equal(el.get('demoTopic').textContent,'一生無料になるなら何を選ぶ？');
 });
 
 test('joined screen shows messages as text and Japanese IME confirmation does not submit', () => {
